@@ -1,0 +1,550 @@
+
+/* =========================================
+   TOPBAR
+========================================= */
+
+.topbar {
+    height: 74px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 28px 0 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-bottom: 1px solid #edf0f5;
+    position: relative;
+    z-index: 50;
+  }
+  
+  /* =========================================
+     BREADCRUMB
+  ========================================= */
+  
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #98a2b3;
+    font-size: 13px;
+  }
+  
+  .breadcrumb strong {
+    color: #344054;
+    font-weight: 600;
+  }
+  
+  .breadcrumb-separator {
+    color: #c2c9d3;
+  }
+  
+  /* =========================================
+     TOPBAR RIGHT
+  ========================================= */
+  
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  
+  .topbar-menu-wrapper {
+    position: relative;
+  }
+  
+  /* =========================================
+     NOTIFICATION BUTTON
+  ========================================= */
+  
+  .notification-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: #667085;
+    background: transparent;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  
+  .notification-button:hover,
+  .notification-button.menu-active {
+    background: #f1f5ff;
+    color: #315fe8;
+  }
+  
+  .notification-dot {
+    width: 8px;
+    height: 8px;
+    background: #315fe8;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+  }
+  
+  /* =========================================
+     ADMIN PROFILE
+  ========================================= */
+  
+  .topbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 0;
+    padding: 5px 0 5px 4px;
+    background: transparent;
+    color: #475467;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: color 0.2s, background 0.2s;
+  }
+  
+  .topbar-profile:hover {
+    color: #315fe8;
+  }
+  
+  .topbar-avatar {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #17233e;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  
+  .topbar-admin-name {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  
+  /* =========================================
+     DROPDOWN COMMON STYLES
+  ========================================= */
+  
+  .topbar-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-radius: 13px;
+    box-shadow: 0 12px 36px rgba(16, 24, 40, 0.14);
+    overflow: hidden;
+    z-index: 100;
+    animation: dropdownFadeIn 0.18s ease;
+  }
+  
+  @keyframes dropdownFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* =========================================
+     NOTIFICATION DROPDOWN
+  ========================================= */
+  
+  .notification-dropdown {
+    width: 340px;
+    max-width: calc(100vw - 30px);
+  }
+  
+  .dropdown-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 17px 18px 14px;
+    border-bottom: 1px solid #edf0f5;
+  }
+  
+  .dropdown-heading h3 {
+    margin: 0 0 4px;
+    color: #17233e;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .dropdown-heading p {
+    margin: 0;
+    color: #98a2b3;
+    font-size: 11px;
+  }
+  
+  /* Close entire notification panel */
+  
+  .dropdown-close {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #98a2b3;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  
+  .dropdown-close:hover {
+    background: #f2f4f7;
+    color: #344054;
+  }
+  
+  /* =========================================
+     EMPTY NOTIFICATION STATE
+  ========================================= */
+  
+  .dropdown-empty {
+    padding: 28px 20px;
+    text-align: center;
+  }
+  
+  .dropdown-empty-icon {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #315fe8;
+    background: #eef3ff;
+  }
+  
+  .dropdown-empty strong {
+    display: block;
+    color: #344054;
+    font-size: 13px;
+  }
+  
+  .dropdown-empty p {
+    margin: 6px 0 0;
+    color: #98a2b3;
+    font-size: 12px;
+  }
+  
+  .dropdown-empty button {
+    margin-top: 12px;
+    padding: 7px 12px;
+    border: 1px solid #dce3ed;
+    border-radius: 7px;
+    background: #fff;
+    color: #315fe8;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .dropdown-empty button:hover {
+    background: #f1f5ff;
+  }
+  
+  /* =========================================
+     LOADING SPINNER
+  ========================================= */
+  
+  .loading-spinner {
+    width: 25px;
+    height: 25px;
+    margin: 0 auto 12px;
+    border: 3px solid #e7edff;
+    border-top-color: #315fe8;
+    border-radius: 50%;
+    animation: topbarSpin 0.7s linear infinite;
+  }
+  
+  @keyframes topbarSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* =========================================
+     NOTIFICATION LIST
+  ========================================= */
+  
+  .notification-list {
+    max-height: 340px;
+    overflow-y: auto;
+  }
+  
+  .notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 13px 12px 13px 16px;
+    border-bottom: 1px solid #f0f2f6;
+    transition: background 0.2s;
+  }
+  
+  .notification-item:hover {
+    background: #fafbfe;
+  }
+  
+  .notification-item:last-child {
+    border-bottom: 0;
+  }
+  
+  /* Notification icon */
+  
+  .notification-item-icon {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #f0f4ff;
+    color: #315fe8;
+  }
+  
+  /* Notification text */
+  
+  .notification-item-content {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .notification-item-content p {
+    margin: 0;
+    color: #344054;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  
+  .notification-item-content span {
+    display: block;
+    margin-top: 5px;
+    color: #98a2b3;
+    font-size: 10px;
+  }
+  
+  /* =========================================
+     DISMISS NOTIFICATION BUTTON
+  ========================================= */
+  
+  .notification-dismiss {
+    flex: 0 0 25px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #98a2b3;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  
+  .notification-dismiss:hover {
+    background: #fff0ef;
+    color: #d92d20;
+  }
+  
+  .notification-dismiss:focus-visible,
+  .dropdown-close:focus-visible {
+    outline: 2px solid #315fe8;
+    outline-offset: 2px;
+  }
+  
+  /* =========================================
+     NOTIFICATION FOOTER
+  ========================================= */
+  
+  .dropdown-footer {
+    padding: 10px 16px;
+    background: #fbfcfe;
+    border-top: 1px solid #edf0f5;
+  }
+  
+  .dropdown-footer button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+    color: #315fe8;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .dropdown-footer button:hover {
+    color: #1d46bd;
+  }
+  
+  .dropdown-footer button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* =========================================
+     PROFILE DROPDOWN
+  ========================================= */
+  
+  .profile-dropdown {
+    width: 270px;
+    max-width: calc(100vw - 30px);
+  }
+  
+  /* Profile information */
+  
+  .profile-dropdown-info {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 17px;
+  }
+  
+  .profile-large-avatar {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+  
+  /* Profile details */
+  
+  .profile-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .profile-text strong {
+    color: #17233e;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+  
+  .profile-text span {
+    color: #667085;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  
+  .profile-text small {
+    color: #98a2b3;
+    font-size: 10px;
+  }
+  
+  /* Profile divider */
+  
+  .profile-dropdown-divider {
+    height: 1px;
+    background: #edf0f5;
+  }
+  
+  /* =========================================
+     PROFILE LOGOUT BUTTON
+  ========================================= */
+  
+  .profile-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 17px;
+    background: #fff;
+    border: 0;
+    color: #b42318;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .profile-menu-item:hover {
+    background: #fff5f4;
+  }
+  
+  /* =========================================
+     RESPONSIVE DESIGN
+  ========================================= */
+  
+  @media (max-width: 900px) {
+    .topbar {
+      padding: 0 20px;
+    }
+  
+    .topbar-right {
+      gap: 14px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .topbar {
+      height: 64px;
+      padding: 0 14px;
+    }
+  
+    .topbar-right {
+      gap: 8px;
+    }
+  
+    .topbar-admin-name {
+      display: none;
+    }
+  
+    .notification-dropdown {
+      position: fixed;
+      top: 72px;
+      right: 12px;
+      width: 340px;
+      max-width: calc(100vw - 24px);
+    }
+  
+    .profile-dropdown {
+      right: 0;
+      width: 270px;
+      max-width: calc(100vw - 24px);
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .breadcrumb {
+      gap: 6px;
+      font-size: 12px;
+    }
+  
+    .topbar {
+      padding: 0 10px;
+    }
+  
+    .topbar-right {
+      gap: 4px;
+    }
+  }
