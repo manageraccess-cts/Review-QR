@@ -4,10 +4,11 @@ import Icon from "./Icon";
 import {
   getCurrentAdmin,
   getReviewActivity,
+  logoutAdmin,
 } from "../services/api";
 import "./Topbar.css";
 
-const Topbar = ({ currentPage = "Dashboard", onNavigate }) => {
+const Topbar = ({ currentPage = "Dashboard" }) => {
   const [admin, setAdmin] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [dismissedIds, setDismissedIds] = useState([]);
@@ -49,7 +50,7 @@ const Topbar = ({ currentPage = "Dashboard", onNavigate }) => {
     };
   }, []);
 
-  // Close dropdowns when clicking outside the topbar menus
+  // Close dropdowns when clicking anywhere outside the topbar menus
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
@@ -121,9 +122,7 @@ const Topbar = ({ currentPage = "Dashboard", onNavigate }) => {
   // Dismiss one notification from the current UI session
   const dismissNotification = (activity, index) => {
     const id = String(
-      activity?._id ||
-        activity?.id ||
-        `${activity?.businessId || "activity"}-${index}`
+      activity?._id || activity?.id || `${activity?.businessId || "activity"}-${index}`
     );
 
     setDismissedIds((current) =>
@@ -131,17 +130,9 @@ const Topbar = ({ currentPage = "Dashboard", onNavigate }) => {
     );
   };
 
-  // Open the shared logout confirmation modal in App.jsx
   const handleLogout = () => {
-    setShowProfile(false);
-
-    if (typeof onNavigate === "function") {
-      onNavigate("logout");
-    } else {
-      console.error(
-        "Logout navigation handler is missing. Pass onNavigate from App.jsx."
-      );
-    }
+    logoutAdmin();
+    window.location.href = "/";
   };
 
   const adminName =
@@ -200,8 +191,8 @@ const Topbar = ({ currentPage = "Dashboard", onNavigate }) => {
       index,
       id: String(
         activity?._id ||
-          activity?.id ||
-          `${activity?.businessId || "activity"}-${index}`
+        activity?.id ||
+        `${activity?.businessId || "activity"}-${index}`
       ),
     }))
     .filter(({ id }) => !dismissedIds.includes(id))
@@ -273,47 +264,47 @@ const Topbar = ({ currentPage = "Dashboard", onNavigate }) => {
                 </div>
               ) : (
                 <div className="notification-list">
-                  {visibleNotifications.map(
-                    ({ activity, index, id }) => (
-                      <div className="notification-item" key={id}>
-                        <div className="notification-item-icon">
-                          <Icon name="review" size={16} />
-                        </div>
-
-                        <div className="notification-item-content">
-                          <p>{getActivityText(activity)}</p>
-                          <span>
-                            {formatActivityDate(
-                              activity.createdAt || activity.timestamp
-                            )}
-                          </span>
-                        </div>
-
-                        <button
-                          type="button"
-                          className="notification-dismiss"
-                          aria-label="Dismiss notification"
-                          title="Dismiss"
-                          onClick={() =>
-                            dismissNotification(activity, index)
-                          }
-                        >
-                          ×
-                        </button>
+                  {visibleNotifications.map(({ activity, index, id }) => (
+                    <div className="notification-item" key={id}>
+                      <div className="notification-item-icon">
+                        <Icon name="review" size={16} />
                       </div>
-                    )
-                  )}
+
+                      <div className="notification-item-content">
+                        <p>{getActivityText(activity)}</p>
+                        <span>
+                          {formatActivityDate(
+                            activity.createdAt || activity.timestamp
+                          )}
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="notification-dismiss"
+                        aria-label="Dismiss notification"
+                        title="Dismiss"
+                        onClick={() =>
+                          dismissNotification(activity, index)
+                        }
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
               <div className="dropdown-footer">
                 <button
                   type="button"
-                  onClick={loadNotifications}
-                  disabled={loadingNotifications}
+                  onClick={() => {
+                    setNotifications([]);
+                    setDismissedIds([]);
+                  }}
+                  disabled={visibleNotifications.length === 0}
                 >
-                  <Icon name="refresh" size={14} />
-                  Refresh activity
+                  Clear all
                 </button>
               </div>
             </div>

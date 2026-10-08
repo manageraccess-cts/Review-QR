@@ -1478,76 +1478,968 @@
   .business-actions { gap: 2px; }
 }
 
+/* =========================================================
+   MOBILE BUSINESS LIST - RESPONSIVE CARD LAYOUT
+   Keeps the desktop table unchanged.
+========================================================= */
 
+@media (max-width: 700px) {
+  .business-table-card {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 14px;
+  }
 
-/* Active / Inactive badges */
-.business-table .status-active,
-.business-table .business-status-active {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 7px 13px;
-  border-radius: 9px;
-  color: #15803d !important;
-  background: #dcfce7 !important;
-  border: 1px solid #bbf7d0;
-  font-weight: 700;
-  white-space: nowrap;
+  .business-table-header {
+    padding: 14px 15px;
+  }
+
+  .business-table-header h2 {
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  .business-table-header p {
+    font-size: 9px;
+    margin-top: 3px;
+  }
+
+  .business-table-wrapper {
+    width: 100%;
+    overflow: visible;
+    padding: 0 10px 10px;
+  }
+
+  .business-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: auto !important;
+    border-collapse: separate;
+    border-spacing: 0 9px;
+    display: table;
+  }
+
+  .business-table thead {
+    display: none;
+  }
+
+  .business-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 100%;
+  }
+
+  .business-table tbody tr {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 0;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(25, 52, 92, 0.045);
+  }
+
+  .business-table tbody td {
+    min-width: 0;
+    width: auto;
+    min-height: 0;
+    padding: 9px 10px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: 0;
+    border-bottom: 1px solid #f0f2f6;
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  /* Business header */
+  .business-table tbody td:nth-child(1) {
+    grid-column: 1 / -1;
+    padding: 12px 11px;
+    border-bottom: 1px solid #e9edf3;
+  }
+
+  .business-table tbody td:nth-child(1)::before {
+    display: none;
+  }
+
+  .business-name-cell {
+    width: 100%;
+    gap: 9px;
+  }
+
+  .business-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    flex: 0 0 34px !important;
+    border-radius: 9px;
+    font-size: 13px;
+  }
+
+  .business-name-cell > div:last-child {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .business-name-cell strong {
+    display: block;
+    max-width: 100%;
+    color: #17284a;
+    font-size: 12px !important;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .business-name-cell span {
+    display: block;
+    margin-top: 3px;
+    color: #8b98aa;
+    font-size: 9px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Detail cells */
+  .business-table tbody td:nth-child(2),
+  .business-table tbody td:nth-child(3),
+  .business-table tbody td:nth-child(4),
+  .business-table tbody td:nth-child(5),
+  .business-table tbody td:nth-child(6) {
+    position: relative;
+    display: block;
+    padding: 8px 10px;
+  }
+
+  .business-table tbody td:nth-child(2)::before,
+  .business-table tbody td:nth-child(3)::before,
+  .business-table tbody td:nth-child(4)::before,
+  .business-table tbody td:nth-child(5)::before,
+  .business-table tbody td:nth-child(6)::before {
+    display: block;
+    margin-bottom: 4px;
+    color: #9aa6b6;
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+  }
+
+  .business-table tbody td:nth-child(2)::before {
+    content: "Category";
+  }
+
+  .business-table tbody td:nth-child(3)::before {
+    content: "Questions";
+  }
+
+  .business-table tbody td:nth-child(4)::before {
+    content: "QR Status";
+  }
+
+  .business-table tbody td:nth-child(5)::before {
+    content: "Status";
+  }
+
+  .business-table tbody td:nth-child(6)::before {
+    content: "Created";
+  }
+
+  .business-table tbody td:nth-child(2),
+  .business-table tbody td:nth-child(4),
+  .business-table tbody td:nth-child(6) {
+    border-right: 1px solid #f0f2f6;
+  }
+
+  .business-table tbody td:nth-child(6) {
+    border-right: 0;
+  }
+
+  .category-badge {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 9px;
+  }
+
+  .questions-count {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .questions-count strong {
+    font-size: 10px;
+  }
+
+  .questions-count span {
+    font-size: 8px;
+  }
+
+  .business-view-qr-button {
+    width: auto;
+    max-width: 100%;
+    min-height: 25px;
+    padding: 4px 7px;
+    border-radius: 6px;
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
+  .business-view-qr-button svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .qr-status {
+    font-size: 9px;
+  }
+
+  .business-table tbody td:nth-child(5) .status-badge {
+    font-size: 8px;
+  }
+
+  .created-date {
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  /* Actions */
+  .business-table tbody td:nth-child(7) {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    min-height: 45px;
+    padding: 7px 10px;
+    border-bottom: 0;
+    background: #fbfcfe;
+  }
+
+  .business-table tbody td:nth-child(7)::before {
+    content: "Actions";
+    margin-right: auto;
+    color: #9aa6b6;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+  }
+
+  .business-actions {
+    gap: 6px;
+  }
+
+  .table-action {
+    width: 30px !important;
+    height: 30px !important;
+    flex: 0 0 30px !important;
+    border-radius: 7px;
+  }
+
+  /* Empty state */
+  .business-empty-state {
+    margin: 0;
+    padding: 28px 16px;
+  }
 }
 
-.business-table .status-inactive,
-.business-table .business-status-inactive {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 7px 13px;
-  border-radius: 9px;
-  color: #dc2626 !important;
-  background: #fee2e2 !important;
-  border: 1px solid #fecaca;
-  font-weight: 700;
-  white-space: nowrap;
+@media (max-width: 420px) {
+  .businesses-page {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .business-table-card {
+    border-radius: 13px;
+  }
+
+  .business-table-wrapper {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .business-table tbody td {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .business-table tbody td:nth-child(1) {
+    padding: 11px 9px;
+  }
+
+  .business-name-cell strong {
+    font-size: 11px !important;
+  }
+
+  .business-name-cell span {
+    font-size: 8px !important;
+  }
+
+  .business-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px;
+    flex-basis: 32px !important;
+  }
 }
 
-/* View action */
-.business-table .table-action.view-action {
-  color: #526b91 !important;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+
+/* =====================================================
+   CUSTOM DELETE CONFIRMATION
+   ===================================================== */
+
+   .delete-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    padding: 24px;
+  
+    background: rgba(15, 23, 42, 0.55);
+  
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  }
+  
+  .delete-confirm-modal {
+    width: min(430px, 100%);
+  
+    padding: 30px;
+  
+    background: #ffffff;
+  
+    border: 1px solid #e4e9f5;
+  
+    border-radius: 20px;
+  
+    box-shadow:
+      0 24px 70px rgba(15, 23, 42, 0.22);
+  
+    text-align: center;
+  
+    animation: deleteConfirmIn 0.18s ease-out;
+  }
+  
+  .delete-confirm-icon {
+    width: 54px;
+    height: 54px;
+  
+    margin: 0 auto 18px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    border-radius: 16px;
+  
+    background: #fff1f2;
+  
+    color: #dc2626;
+  }
+  
+  .delete-confirm-modal h2 {
+    margin: 0;
+  
+    color: #17233e;
+  
+    font-size: 22px;
+    font-weight: 800;
+  }
+  
+  .delete-confirm-message {
+    margin: 12px 0 6px;
+  
+    color: #53627d;
+  
+    font-size: 15px;
+  
+    line-height: 1.55;
+  }
+  
+  .delete-confirm-message strong {
+    color: #17233e;
+  
+    font-weight: 700;
+  }
+  
+  .delete-confirm-warning {
+    margin: 0 0 24px;
+  
+    color: #8a94a8;
+  
+    font-size: 13px;
+  }
+  
+  .delete-confirm-actions {
+    display: flex;
+  
+    gap: 12px;
+  }
+  
+  .delete-confirm-actions button {
+    flex: 1;
+  
+    min-height: 44px;
+  
+    padding: 0 18px;
+  
+    border-radius: 10px;
+  
+    font-family: inherit;
+  
+    font-size: 14px;
+  
+    font-weight: 700;
+  
+    cursor: pointer;
+  
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      opacity 0.15s ease;
+  }
+  
+  .delete-confirm-actions button:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  
+  .delete-confirm-actions button:disabled {
+    cursor: not-allowed;
+  
+    opacity: 0.65;
+  }
+  
+  .delete-confirm-cancel {
+    border: 1px solid #dce3f0;
+  
+    background: #ffffff;
+  
+    color: #34415c;
+  }
+  
+  .delete-confirm-cancel:hover:not(:disabled) {
+    background: #f7f9fc;
+  }
+  
+  .delete-confirm-delete {
+    border: 1px solid #dc2626;
+  
+    background: #dc2626;
+  
+    color: #ffffff;
+  
+    box-shadow:
+      0 8px 18px rgba(220, 38, 38, 0.18);
+  }
+  
+  .delete-confirm-delete:hover:not(:disabled) {
+    background: #b91c1c;
+  
+    border-color: #b91c1c;
+  }
+  
+  @keyframes deleteConfirmIn {
+    from {
+      opacity: 0;
+  
+      transform:
+        translateY(8px)
+        scale(0.98);
+    }
+  
+    to {
+      opacity: 1;
+  
+      transform:
+        translateY(0)
+        scale(1);
+    }
+  }
+  
+  @media (max-width: 520px) {
+    .delete-confirm-overlay {
+      padding: 16px;
+    }
+  
+    .delete-confirm-modal {
+      padding: 24px 20px;
+  
+      border-radius: 18px;
+    }
+  
+    .delete-confirm-actions {
+      flex-direction: column-reverse;
+    }
+  
+    .delete-confirm-actions button {
+      width: 100%;
+    }
+  }
+
+  /* =========================================================
+   REVIEWQR — BUSINESSES PAGE DARK MODE FIX
+   Fixes text visibility without changing layout/functionality
+========================================================= */
+
+.app.dark-mode .businesses-page {
+  color: #e8eef8 !important;
 }
 
-/* Edit action — blue */
-.business-table .table-action.edit-action {
-  color: #2563eb !important;
-  background: #eff6ff;
-  border: 1px solid #dbeafe;
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.app.dark-mode .businesses-header h1 {
+  color: #f5f8ff !important;
 }
 
-/* Delete action — red */
-.business-table .table-action.delete-action {
-  color: #ef4444 !important;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+.app.dark-mode .businesses-header .page-eyebrow {
+  color: #69a0ff !important;
 }
 
-.business-table .table-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9px;
-  transition: background 0.2s ease, transform 0.2s ease;
+.app.dark-mode .businesses-subtitle {
+  color: #aebbd0 !important;
 }
 
-.business-table .table-action:hover {
-  transform: translateY(-2px);
+/* Hero overlay — keeps the hero image visible in dark mode */
+.app.dark-mode .businesses-header {
+  background-color: #1a2638 !important;
+  border-color: #34445d !important;
 }
 
-.business-table .table-action.edit-action:hover {
-  background: #dbeafe;
+.app.dark-mode .businesses-header::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(18, 29, 46, 0.97) 0%,
+      rgba(18, 29, 46, 0.91) 38%,
+      rgba(18, 29, 46, 0.55) 67%,
+      rgba(18, 29, 46, 0.12) 100%
+    ) !important;
 }
 
-.business-table .table-action.delete-action:hover {
-  background: #fee2e2;
+/* =========================================================
+   SUMMARY / STAT CARDS
+========================================================= */
+
+.app.dark-mode .business-overview-strip,
+.app.dark-mode .business-summary-card {
+  background: #1b273a !important;
+  border-color: #344258 !important;
+}
+
+.app.dark-mode .business-overview-strip {
+  box-shadow: none !important;
+}
+
+.app.dark-mode .business-overview-strip .business-summary-card {
+  background: transparent !important;
+  border-right-color: #344258 !important;
+}
+
+.app.dark-mode .business-summary-card p {
+  color: #aab7ca !important;
+}
+
+.app.dark-mode .business-summary-card h3 {
+  color: #f1f5fb !important;
+}
+
+/* Summary icons */
+.app.dark-mode .summary-icon-blue {
+  background: #25375a !important;
+  color: #76a4ff !important;
+}
+
+.app.dark-mode .summary-icon-green {
+  background: #1d3b31 !important;
+  color: #61d89a !important;
+}
+
+.app.dark-mode .summary-icon-purple {
+  background: #332c50 !important;
+  color: #b59aff !important;
+}
+
+.app.dark-mode .summary-icon-orange {
+  background: #473522 !important;
+  color: #ffc274 !important;
+}
+
+/* =========================================================
+   TOP ACTION BUTTONS
+========================================================= */
+
+.app.dark-mode .business-overview-strip .secondary-action-button,
+.app.dark-mode .secondary-action-button {
+  background: #243249 !important;
+  color: #e8eef8 !important;
+  border-color: #40506a !important;
+}
+
+.app.dark-mode .secondary-action-button:hover {
+  background: #2c3b53 !important;
+  color: #ffffff !important;
+}
+
+.app.dark-mode .business-overview-strip .primary-action-button,
+.app.dark-mode .primary-action-button {
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   SEARCH + FILTER TOOLBAR
+========================================================= */
+
+.app.dark-mode .business-toolbar {
+  background: #1b273a !important;
+  border-color: #344258 !important;
+}
+
+.app.dark-mode .business-search {
+  background: #222f43 !important;
+  border-color: #3d4d65 !important;
+  color: #b9c5d7 !important;
+}
+
+.app.dark-mode .business-search:focus-within {
+  background: #25344a !important;
+  border-color: #5c82d8 !important;
+  box-shadow: 0 0 0 3px rgba(83, 125, 220, 0.14) !important;
+}
+
+.app.dark-mode .business-search svg {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode .business-search input {
+  color: #f1f5fb !important;
+  background: transparent !important;
+}
+
+.app.dark-mode .business-search input::placeholder {
+  color: #8796ab !important;
+}
+
+.app.dark-mode .search-clear {
+  background: #35445a !important;
+  color: #d6deea !important;
+}
+
+.app.dark-mode .search-clear:hover {
+  background: #44556d !important;
+  color: #ffffff !important;
+}
+
+/* Dropdown filters */
+.app.dark-mode .business-filters select {
+  background-color: #222f43 !important;
+  color: #e3eaf5 !important;
+  border-color: #40506a !important;
+}
+
+.app.dark-mode .business-filters select:focus {
+  border-color: #5c82d8 !important;
+  box-shadow: 0 0 0 3px rgba(83, 125, 220, 0.12) !important;
+}
+
+.app.dark-mode .business-filters select option {
+  background: #222f43 !important;
+  color: #e3eaf5 !important;
+}
+
+/* =========================================================
+   BUSINESS TABLE CARD
+========================================================= */
+
+.app.dark-mode .business-table-card {
+  background: #1b273a !important;
+  border-color: #344258 !important;
+}
+
+.app.dark-mode .business-table-header {
+  background: #1b273a !important;
+  border-bottom-color: #344258 !important;
+}
+
+.app.dark-mode .business-table-header h2 {
+  color: #f1f5fb !important;
+}
+
+.app.dark-mode .business-table-header p {
+  color: #9eacc0 !important;
+}
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.app.dark-mode .business-table thead {
+  background: #263449 !important;
+}
+
+.app.dark-mode .business-table th {
+  background: #263449 !important;
+  color: #dce5f2 !important;
+  border-bottom-color: #405069 !important;
+}
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.app.dark-mode .business-table tbody tr {
+  background: #1b273a !important;
+}
+
+.app.dark-mode .business-table tbody tr:hover {
+  background: #243249 !important;
+}
+
+.app.dark-mode .business-table td {
+  background: transparent !important;
+  color: #cbd5e3 !important;
+  border-bottom-color: #344258 !important;
+}
+
+/* =========================================================
+   BUSINESS NAME + ID
+========================================================= */
+
+.app.dark-mode .business-name-cell strong {
+  color: #f1f5fb !important;
+}
+
+.app.dark-mode .business-name-cell span {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode .business-avatar {
+  background: #263b62 !important;
+  color: #78a5ff !important;
+}
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+.app.dark-mode .category-badge {
+  background: #303b4d !important;
+  color: #dbe4f1 !important;
+  border: 1px solid #435169 !important;
+}
+
+/* =========================================================
+   QUESTIONS
+========================================================= */
+
+.app.dark-mode .questions-count strong {
+  color: #eaf0f8 !important;
+}
+
+.app.dark-mode .questions-count span {
+  color: #9eacc0 !important;
+}
+
+/* =========================================================
+   QR STATUS
+========================================================= */
+
+.app.dark-mode .qr-status {
+  border: 1px solid transparent;
+}
+
+.app.dark-mode .qr-generated {
+  background: #193a2c !important;
+  color: #6fe0a3 !important;
+  border-color: #2c6249 !important;
+}
+
+.app.dark-mode .qr-generated > span {
+  background: #52ca88 !important;
+}
+
+.app.dark-mode .qr-pending {
+  background: #44341f !important;
+  color: #ffc875 !important;
+  border-color: #66502d !important;
+}
+
+.app.dark-mode .qr-pending > span {
+  background: #e7a84e !important;
+}
+
+/* =========================================================
+   VIEW QR BUTTON
+========================================================= */
+
+.app.dark-mode .business-view-qr-button {
+  background: #e8f0ff !important;
+  color: #2859c7 !important;
+  border-color: #c9d9f8 !important;
+}
+
+.app.dark-mode .business-view-qr-button:hover {
+  background: #d9e6ff !important;
+  color: #1e4dab !important;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.app.dark-mode .created-date {
+  color: #aab7ca !important;
+}
+
+/* =========================================================
+   ACTION ICONS
+========================================================= */
+
+.app.dark-mode .table-action {
+  color: #aab7ca !important;
+  background: transparent !important;
+}
+
+.app.dark-mode .table-action:hover {
+  background: #2b394f !important;
+}
+
+.app.dark-mode .view-action:hover {
+  background: #263b62 !important;
+  color: #78a5ff !important;
+}
+
+.app.dark-mode .edit-action:hover {
+  background: #493b25 !important;
+  color: #ffc875 !important;
+}
+
+.app.dark-mode .delete-action:hover {
+  background: #492a30 !important;
+  color: #ff858f !important;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.app.dark-mode .business-empty-state {
+  background: #1b273a !important;
+}
+
+.app.dark-mode .empty-icon {
+  background: #28374f !important;
+  color: #9bb8ef !important;
+}
+
+.app.dark-mode .business-empty-state h3 {
+  color: #eef3fa !important;
+}
+
+.app.dark-mode .business-empty-state p {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode .empty-clear-button {
+  background: #2b394e !important;
+  color: #dbe4f0 !important;
+}
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.app.dark-mode .business-error {
+  background: #3a2529 !important;
+  border-color: #654047 !important;
+}
+
+.app.dark-mode .business-error strong {
+  color: #ff9da5 !important;
+}
+
+.app.dark-mode .business-error span {
+  color: #d9a9ae !important;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.app.dark-mode .businesses-loading {
+  color: #e5ecf6 !important;
+}
+
+.app.dark-mode .businesses-loading p,
+.app.dark-mode .businesses-loading span {
+  color: #9eacc0 !important;
+}
+
+/* =========================================================
+   GENERAL DARK-MODE TEXT SAFETY
+   Catches text inside the Businesses page that may have
+   inherited light-theme colors.
+========================================================= */
+
+.app.dark-mode .businesses-page label {
+  color: #cbd5e3 !important;
+}
+
+.app.dark-mode .businesses-page small {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode .businesses-page strong {
+  color: #eef3fa;
+}
+
+.app.dark-mode .businesses-page button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   MOBILE DARK MODE
+========================================================= */
+
+@media (max-width: 700px) {
+  .app.dark-mode .businesses-header::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(18, 29, 46, 0.98) 0%,
+        rgba(18, 29, 46, 0.92) 56%,
+        rgba(18, 29, 46, 0.45) 100%
+      ) !important;
+  }
+
+  .app.dark-mode .business-table th {
+    color: #dce5f2 !important;
+  }
+
+  .app.dark-mode .business-table td {
+    color: #cbd5e3 !important;
+  }
+
+  .app.dark-mode .business-name-cell strong {
+    color: #f1f5fb !important;
+  }
+
+  .app.dark-mode .business-name-cell span {
+    color: #9eacc0 !important;
+  }
 }

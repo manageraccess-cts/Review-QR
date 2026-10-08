@@ -847,3 +847,242 @@
 .app.dark-mode .sidebar-close {
   color: #cbd5e1 !important;
 }
+
+/* =========================================================
+   FINAL DARK MODE OVERRIDES
+========================================================= */
+
+.app.dark-mode .create-business-card,
+.app.dark-mode .business-modal,
+.app.dark-mode .business-modal-body,
+.app.dark-mode .business-modal-header {
+  background: #182337 !important;
+  color: #f1f5fb !important;
+  border-color: #34445c !important;
+}
+
+/* CREATE BUSINESS */
+
+.app.dark-mode .create-card-heading {
+  background: #182337 !important;
+  border-color: #34445c !important;
+}
+
+.app.dark-mode .create-card-heading h2 {
+  color: #f1f5fb !important;
+}
+
+.app.dark-mode .create-card-heading p {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode .create-field label {
+  color: #dce5ef !important;
+}
+
+.app.dark-mode .create-field input,
+.app.dark-mode .create-field select,
+.app.dark-mode .create-field textarea {
+  background: #202e43 !important;
+  color: #f1f5fb !important;
+  border-color: #40516a !important;
+}
+
+.app.dark-mode .create-field input::placeholder,
+.app.dark-mode .create-field textarea::placeholder {
+  color: #8493a8 !important;
+}
+
+.app.dark-mode .create-step strong {
+  color: #cbd6e4 !important;
+}
+
+.app.dark-mode .create-step span {
+  color: #8d9bb0 !important;
+}
+
+.app.dark-mode .create-step.active strong {
+  color: #ffffff !important;
+}
+
+
+/* BUSINESS MODAL */
+
+.app.dark-mode .business-modal-overlay {
+  background: rgba(0, 0, 0, 0.78) !important;
+}
+
+.app.dark-mode .business-modal {
+  background: #182337 !important;
+  border: 1px solid #3b4c65 !important;
+}
+
+.app.dark-mode .business-modal-header {
+  background: #182337 !important;
+  border-bottom-color: #34445c !important;
+}
+
+.app.dark-mode .business-modal-header h2 {
+  color: #f1f5fb !important;
+}
+
+.app.dark-mode .business-modal-header p {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode .business-modal-eyebrow {
+  color: #79a3ff !important;
+}
+
+.app.dark-mode .business-modal-close {
+  background: #29374c !important;
+  color: #dce5ef !important;
+}
+
+
+/* BUSINESS DETAILS */
+
+.app.dark-mode .business-detail-item span,
+.app.dark-mode .business-edit-grid label {
+  color: #aab8ca !important;
+}
+
+.app.dark-mode .business-detail-item strong {
+  color: #eef3fa !important;
+}
+
+.app.dark-mode .business-detail-item a {
+  color: #82aaff !important;
+}
+
+.app.dark-mode .business-detail-questions {
+  border-top-color: #34445c !important;
+}
+
+.app.dark-mode .business-detail-questions h3 {
+  color: #f1f5fb !important;
+}
+
+.app.dark-mode .business-detail-questions ol {
+  color: #c5d0de !important;
+}
+
+
+/* EDIT BUSINESS */
+
+.app.dark-mode .business-edit-grid input,
+.app.dark-mode .business-edit-grid select,
+.app.dark-mode .business-edit-grid textarea {
+  background: #202e43 !important;
+  color: #eef3fa !important;
+  border-color: #40516a !important;
+}
+
+.app.dark-mode .business-edit-grid input::placeholder,
+.app.dark-mode .business-edit-grid textarea::placeholder {
+  color: #8493a8 !important;
+}
+
+
+/* QR MODAL */
+
+.app.dark-mode .business-qr-modal-heading h3 {
+  color: #f1f5fb !important;
+}
+
+.app.dark-mode .business-qr-modal-heading p {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode .business-qr-modal-heading > span {
+  color: #79a3ff !important;
+}
+
+.app.dark-mode .business-qr-url-section label {
+  color: #dce5ef !important;
+}
+
+.app.dark-mode .business-qr-url-row input {
+  background: #202e43 !important;
+  color: #eef3fa !important;
+  border-color: #40516a !important;
+}
+
+
+/* KEEP QR IMAGE WHITE FOR SCANNING */
+
+.app.dark-mode .business-detail-qr-preview {
+  background: #ffffff !important;
+}
+
+
+/* MODAL FOOTER */
+
+.app.dark-mode .business-modal-footer {
+  border-top-color: #34445c !important;
+}
+
+.app.dark-mode .business-modal-secondary {
+  background: #29384d !important;
+  color: #e5edf6 !important;
+  border-color: #43546b !important;
+}
+
+.app.dark-mode .business-modal-primary {
+  background: #3169e8 !important;
+  color: #ffffff !important;
+}
+
+
+/* GLOBAL ADMIN INPUTS */
+
+.app.dark-mode .page-content input,
+.app.dark-mode .page-content select,
+.app.dark-mode .page-content textarea {
+  background: #202e43 !important;
+  color: #eef3fa !important;
+  border-color: #40516a !important;
+}
+
+.app.dark-mode .page-content input::placeholder,
+.app.dark-mode .page-content textarea::placeholder {
+  color: #8493a8 !important;
+}
+
+
+/* GLOBAL TABLES */
+
+.app.dark-mode table {
+  background: #182337 !important;
+  color: #eaf0f7 !important;
+}
+
+.app.dark-mode th {
+  background: #243249 !important;
+  color: #e5edf6 !important;
+  border-color: #3c4d65 !important;
+}
+
+.app.dark-mode td {
+  background: transparent !important;
+  color: #cbd6e4 !important;
+  border-color: #34445c !important;
+}
+
+
+/* GLOBAL HEADINGS */
+
+.app.dark-mode h1,
+.app.dark-mode h2,
+.app.dark-mode h3,
+.app.dark-mode h4 {
+  color: #f1f5fb !important;
+}
+
+.app.dark-mode p {
+  color: #9eacc0 !important;
+}
+
+.app.dark-mode label {
+  color: #dce5ef !important;
+}

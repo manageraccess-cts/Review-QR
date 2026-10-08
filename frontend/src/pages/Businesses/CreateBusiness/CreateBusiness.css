@@ -1748,7 +1748,6 @@
     opacity: 1;
   }
 }
-
 /* =========================================
    RESPONSIVE
 ========================================= */
@@ -1843,6 +1842,7 @@
     width: 100%;
   }
 }
+
 /* =========================================
    REVIEWQR CREATE BUSINESS - REFINED UI
    CSS-only visual overrides; stage logic unchanged
@@ -1888,7 +1888,6 @@
   font-size: 11px;
 }
 
-/* Three stages remain in one horizontal progress row on desktop. */
 .create-stepper {
   display: flex;
   align-items: center;
@@ -2236,7 +2235,6 @@
   font-size: 11px;
 }
 
-/* Review stage */
 .review-summary {
   padding: clamp(18px, 2vw, 27px) clamp(18px, 2.2vw, 33px);
 }
@@ -2329,7 +2327,6 @@
   font-size: 10px;
 }
 
-/* QR generation and success panels scale to available space. */
 .qr-generation-screen {
   min-height: min(620px, calc(100vh - 230px));
   padding: 35px 20px;
@@ -2401,8 +2398,7 @@
     margin: 0 10px;
   }
 }
-
-/* Compact layout: retain all three stages, allow wrapping instead of overflow. */
+/* Compact layout */
 @media (max-width: 700px) {
   .create-business-page {
     padding: 13px;
@@ -2615,8 +2611,8 @@
 
 /* =========================================
    QR SUCCESS — REFINED VISUAL DESIGN
-   CSS-only polish; preserves existing markup
 ========================================= */
+
 .qr-success-page {
   position: relative;
   isolation: isolate;
@@ -2791,21 +2787,35 @@
   animation: qrSuccessLift .45s ease both;
 }
 
-.qr-details-card { animation-delay: .06s; }
-
-@keyframes qrSuccessLift {
-  from { opacity: .65; transform: translateY(7px); }
-  to { opacity: 1; transform: translateY(0); }
+.qr-details-card {
+  animation-delay: .06s;
 }
 
-/* Keep the success content comfortable on laptop/tablet widths. */
+@keyframes qrSuccessLift {
+  from {
+    opacity: .65;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 1050px) {
   .qr-success-content {
     grid-template-columns: minmax(250px, .85fr) minmax(0, 1.15fr);
     gap: 14px;
   }
-  .qr-preview-card { min-height: 350px; }
-  .qr-details-card { padding: 18px; }
+
+  .qr-preview-card {
+    min-height: 350px;
+  }
+
+  .qr-details-card {
+    padding: 18px;
+  }
 }
 
 @media (max-width: 760px) {
@@ -2813,14 +2823,27 @@
     padding: 17px;
     border-radius: 15px;
   }
-  .qr-success-header { padding-bottom: 17px; }
+
+  .qr-success-header {
+    padding-bottom: 17px;
+  }
+
   .qr-success-content {
     grid-template-columns: minmax(0, 1fr);
     margin-top: 15px;
   }
-  .qr-preview-card { min-height: 310px; }
-  .qr-code-wrapper { max-width: min(78vw, 280px); }
-  .qr-details-card { padding: 17px; }
+
+  .qr-preview-card {
+    min-height: 310px;
+  }
+
+  .qr-code-wrapper {
+    max-width: min(78vw, 280px);
+  }
+
+  .qr-details-card {
+    padding: 17px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2833,87 +2856,748 @@
   }
 }
 
-
 /* =====================================================
    QR SUCCESS PAGE — CUSTOM PREMIUM LOOK
-   Scoped to the generated-QR screen only.
 ===================================================== */
+
 .qr-premium-success {
-  position: relative; isolation: isolate; overflow: hidden;
-  width: 100%; max-width: 1500px; margin: 0 auto;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
   padding: clamp(22px, 2vw, 32px);
-  border: 1px solid #dce7fb; border-radius: 24px;
+  border: 1px solid #dce7fb;
+  border-radius: 24px;
   background: linear-gradient(125deg, #f9fcff 0%, #f2f7ff 43%, #f5f1ff 72%, #edf7ff 100%);
   box-shadow: 0 20px 60px rgba(44, 83, 155, .10);
 }
-.qr-premium-success::before { content:""; position:absolute; z-index:-2; inset:0; background: radial-gradient(ellipse at 77% 4%,rgba(126,102,255,.12),transparent 35%),radial-gradient(ellipse at 100% 62%,rgba(43,167,255,.12),transparent 32%); pointer-events:none; }
-.qr-premium-decoration { position:absolute; z-index:-1; top:0; right:0; width:38%; height:210px; overflow:hidden; pointer-events:none; }
-.qr-decoration-orb { position:absolute; display:block; border-radius:50%; filter:blur(.2px); }
-.qr-orb-one { width:260px;height:260px;right:-90px;top:-105px;background:linear-gradient(140deg,rgba(126,103,255,.26),rgba(65,155,255,.20)); }
-.qr-orb-two { width:170px;height:170px;right:32px;top:-102px;background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(130,155,255,.13)); }
-.qr-orb-three { width:13px;height:13px;right:38%;top:73px;background:#9c83ff;box-shadow:0 0 0 7px rgba(156,131,255,.08); }
-.qr-decoration-mark { position:absolute;right:75px;top:35px;width:82px;height:82px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.75);border-radius:50%;color:#5545ff;background:rgba(255,255,255,.66);box-shadow:0 12px 30px rgba(72,91,190,.10); }
-.qr-premium-header { position:relative; z-index:1; display:block; padding:0 0 22px; border:0; }
-.qr-success-copy { max-width:780px; }
-.qr-premium-header .qr-success-eyebrow { display:inline-flex;align-items:center;gap:10px;margin-bottom:12px;padding:5px 13px 5px 5px;border-radius:30px;background:linear-gradient(90deg,#d8f8e6,#eaf9ef);color:#17663b;font-size:11px;font-weight:800;letter-spacing:.06em; }
-.qr-premium-header .qr-success-check { display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:50%;background:linear-gradient(135deg,#4fe18d,#18bb6c);color:#fff;box-shadow:0 5px 13px rgba(22,185,105,.22); }
-.qr-premium-header h1 { margin:0 0 7px;color:#101d3b;font-size:clamp(27px,3vw,44px);font-weight:850;letter-spacing:-.045em;line-height:1.12; }
-.qr-premium-header h1 span { color:#315eff;background:linear-gradient(90deg,#318bff,#6036ff);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
-.qr-premium-header p { margin:0;color:#7182a3;font-size:clamp(12px,1.15vw,16px);line-height:1.6; }
-.qr-premium-header p strong { color:#172744; }
-.qr-premium-content { position:relative;z-index:1;display:grid;grid-template-columns:minmax(300px,.82fr) minmax(420px,1fr);gap:16px;align-items:stretch; }
-.qr-premium-preview { position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:460px;padding:28px 20px;border:1px solid rgba(255,255,255,.92);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(244,248,255,.78));box-shadow:inset 0 1px 0 #fff,0 12px 32px rgba(69,103,174,.06);overflow:hidden; }
-.qr-preview-glow { position:absolute;z-index:-2;width:85%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(88,143,255,.20),rgba(120,101,255,.08) 48%,transparent 72%);filter:blur(8px); }
-.qr-preview-orbit { position:absolute;z-index:-1;border:1px solid rgba(117,133,255,.14);border-radius:50%; }
-.qr-orbit-a { width:92%;aspect-ratio:1; }
-.qr-orbit-b { width:75%;aspect-ratio:1;border-color:rgba(80,173,255,.12); }
-.qr-preview-dot { position:absolute;width:11px;height:11px;border-radius:50%; }
-.qr-dot-a { left:9%;top:30%;background:#9277ff;box-shadow:0 0 0 6px rgba(146,119,255,.09); }
-.qr-dot-b { right:13%;bottom:24%;background:#66caff;box-shadow:0 0 0 6px rgba(102,202,255,.10); }
-.qr-premium-code { position:relative;z-index:1;display:grid;place-items:center;width:min(100%,310px);aspect-ratio:1;padding:clamp(18px,2vw,27px);border:1px solid #edf1fb;border-radius:23px;background:#fff;box-shadow:0 20px 55px rgba(28,47,91,.13);animation:premiumQrIn .5s ease both; }
-.qr-premium-code svg { display:block;width:100%;height:auto;max-width:100%; }
-.qr-premium-label { position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:13px;padding:10px 20px;border:1px solid rgba(255,255,255,.85);border-radius:30px;background:rgba(255,255,255,.72);color:#203353;font-size:12px;font-weight:750;box-shadow:0 7px 20px rgba(55,88,160,.06); }
-.qr-premium-label svg { color:#356dff; }
-.qr-premium-details { min-width:0;padding:23px 25px;border:1px solid #e5ebf7;border-radius:23px;background:rgba(255,255,255,.94);box-shadow:0 13px 35px rgba(45,74,133,.075); }
-.qr-premium-detail-title { display:flex;align-items:center;gap:13px;padding-bottom:17px;border-bottom:1px solid #edf1f7; }
-.qr-premium-business-icon { display:grid;place-items:center;flex:0 0 54px;width:54px;height:54px;border-radius:15px;background:linear-gradient(145deg,#e8efff,#e8e8ff);color:#2866ff; }
-.qr-premium-business-copy { flex:1;min-width:0; }
-.qr-premium-business-copy h2 { margin:0 0 4px;color:#142343;font-size:19px;font-weight:800; }
-.qr-premium-business-copy p { margin:0;color:#8b9ab5;font-size:11px;line-height:1.5; }
-.qr-premium-status { display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;padding:8px 13px;border-radius:10px;background:#e4f8eb;color:#13733e;font-size:12px;font-weight:800; }
-.qr-premium-status i { width:8px;height:8px;border-radius:50%;background:#1eaa59; }
-.qr-premium-detail-row { display:grid;grid-template-columns:28px minmax(75px,1fr) minmax(0,1.2fr);align-items:center;gap:10px;min-height:51px;border-bottom:1px solid #edf1f7;color:#61728f;font-size:12px; }
-.qr-premium-row-icon { display:grid;place-items:center;color:#263b60; }
-.qr-premium-detail-row strong { min-width:0;overflow-wrap:anywhere;text-align:right;color:#162747;font-size:12px;font-weight:800; }
-.qr-premium-url { padding:14px 0 0; }
-.qr-premium-url-label { display:flex;align-items:center;gap:10px;margin-bottom:9px;color:#61728f;font-size:12px; }
-.qr-premium-url-controls { display:flex;align-items:center;gap:9px;min-width:0; }
-.qr-premium-url-controls input { flex:1;min-width:0;height:43px;padding:0 12px;border:1px solid #e1e8f3;border-radius:10px;background:#f8faff;color:#425473;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px; }
-.qr-premium-url-controls button { display:flex;align-items:center;justify-content:center;gap:7px;flex:0 0 auto;height:43px;padding:0 13px;border:1px solid #dce7ff;border-radius:10px;background:#edf3ff;color:#2360ef;font-size:11px;font-weight:800;cursor:pointer;transition:background .2s,transform .2s; }
-.qr-premium-url-controls button:hover { background:#e0eaff;transform:translateY(-1px); }
-.qr-premium-actions { display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:10px;margin-top:17px; }
-.qr-premium-actions button { display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:48px;padding:0 13px;border-radius:11px;font-size:12px;font-weight:800;cursor:pointer;transition:transform .2s,box-shadow .2s,filter .2s; }
-.qr-premium-actions button:hover { transform:translateY(-2px); }
-.qr-premium-actions .qr-download-button { border:1px solid #dfe7f4;background:#fff;color:#243959; }
-.qr-premium-actions .qr-download-button:hover { box-shadow:0 8px 18px rgba(33,62,117,.08); }
-.qr-premium-actions .qr-business-button { border:0;background:linear-gradient(105deg,#2e9bff,#315bff 55%,#7135f5);color:#fff;box-shadow:0 9px 20px rgba(60,91,239,.20); }
-.qr-premium-actions .qr-business-button:hover { filter:brightness(1.04);box-shadow:0 12px 24px rgba(60,91,239,.26); }
-.qr-premium-note { position:relative;z-index:1;display:flex;align-items:center;gap:15px;margin-top:16px;padding:16px 20px;border:1px solid rgba(255,255,255,.95);border-radius:18px;background:linear-gradient(100deg,rgba(255,255,255,.85),rgba(237,246,255,.92));box-shadow:0 9px 25px rgba(45,85,155,.055); }
-.qr-note-icon { display:grid;place-items:center;flex:0 0 54px;width:54px;height:54px;border-radius:15px;background:linear-gradient(145deg,#e0ecff,#e3eaff);color:#2674ff; }
-.qr-premium-note > div:last-child { display:flex;flex-direction:column;gap:5px;min-width:0; }
-.qr-premium-note strong { color:#182c4a;font-size:13px;font-weight:850; }
-.qr-premium-note span { color:#687c9d;font-size:11px;line-height:1.6; }
-@keyframes premiumQrIn { from {opacity:0;transform:translateY(9px) scale(.98)} to {opacity:1;transform:translateY(0) scale(1)} }
-@media (max-width:1050px) { .qr-premium-content { grid-template-columns:minmax(260px,.8fr) minmax(0,1fr); } .qr-premium-details {padding:19px;} .qr-premium-preview {min-height:410px;} .qr-premium-code {width:min(100%,275px);} }
-@media (max-width:800px) { .qr-premium-content {grid-template-columns:minmax(0,1fr);} .qr-premium-preview {min-height:390px;} .qr-premium-code {width:min(75vw,290px);} .qr-decoration-mark {right:35px;} }
-@media (max-width:520px) { .qr-premium-success {padding:16px;border-radius:17px;} .qr-premium-header {padding-bottom:17px;} .qr-premium-header h1 {font-size:25px;} .qr-premium-header p {font-size:12px;max-width:95%;} .qr-decoration-mark {width:52px;height:52px;right:12px;top:16px;} .qr-decoration-mark svg {width:29px;} .qr-premium-preview {min-height:330px;padding:20px 12px;border-radius:17px;} .qr-premium-code {width:min(76vw,250px);padding:16px;border-radius:17px;} .qr-premium-details {padding:16px;border-radius:17px;} .qr-premium-detail-title {flex-wrap:wrap;gap:10px;} .qr-premium-business-icon {width:45px;height:45px;flex-basis:45px;} .qr-premium-business-copy {flex:1 1 calc(100% - 65px);} .qr-premium-business-copy h2 {font-size:16px;} .qr-premium-status {margin-left:55px;} .qr-premium-detail-row {grid-template-columns:22px minmax(65px,.8fr) minmax(0,1fr);gap:7px;font-size:11px;} .qr-premium-detail-row strong {font-size:11px;} .qr-premium-url-controls {align-items:stretch;flex-wrap:wrap;} .qr-premium-url-controls input {flex-basis:100%;} .qr-premium-url-controls button {flex:1;} .qr-premium-actions {grid-template-columns:1fr;} .qr-premium-actions button {min-height:45px;} .qr-premium-note {align-items:flex-start;padding:13px;gap:11px;} .qr-note-icon {width:43px;height:43px;flex-basis:43px;} .qr-premium-note span {font-size:10px;} }
-@media (prefers-reduced-motion: reduce) { .qr-premium-code {animation:none;} }
+
+.qr-premium-success::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse at 77% 4%,
+      rgba(126,102,255,.12),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 100% 62%,
+      rgba(43,167,255,.12),
+      transparent 32%
+    );
+  pointer-events: none;
+}
+
+.qr-premium-decoration {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  width: 38%;
+  height: 210px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.qr-decoration-orb {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(.2px);
+}
+
+.qr-orb-one {
+  width: 260px;
+  height: 260px;
+  right: -90px;
+  top: -105px;
+  background: linear-gradient(
+    140deg,
+    rgba(126,103,255,.26),
+    rgba(65,155,255,.20)
+  );
+}
+
+.qr-orb-two {
+  width: 170px;
+  height: 170px;
+  right: 32px;
+  top: -102px;
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.72),
+    rgba(130,155,255,.13)
+  );
+}
+
+.qr-orb-three {
+  width: 13px;
+  height: 13px;
+  right: 38%;
+  top: 73px;
+  background: #9c83ff;
+  box-shadow: 0 0 0 7px rgba(156,131,255,.08);
+}
+
+.qr-decoration-mark {
+  position: absolute;
+  right: 75px;
+  top: 35px;
+  width: 82px;
+  height: 82px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 50%;
+  color: #5545ff;
+  background: rgba(255,255,255,.66);
+  box-shadow: 0 12px 30px rgba(72,91,190,.10);
+}
+
+.qr-premium-header {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 0 0 22px;
+  border: 0;
+}
+
+.qr-success-copy {
+  max-width: 780px;
+}
+
+.qr-premium-header .qr-success-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 5px 13px 5px 5px;
+  border-radius: 30px;
+  background: linear-gradient(90deg,#d8f8e6,#eaf9ef);
+  color: #17663b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
+.qr-premium-header .qr-success-check {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#4fe18d,#18bb6c);
+  color: #fff;
+  box-shadow: 0 5px 13px rgba(22,185,105,.22);
+}
+
+.qr-premium-header h1 {
+  margin: 0 0 7px;
+  color: #101d3b;
+  font-size: clamp(27px,3vw,44px);
+  font-weight: 850;
+  letter-spacing: -.045em;
+  line-height: 1.12;
+}
+
+.qr-premium-header h1 span {
+  color: #315eff;
+  background: linear-gradient(90deg,#318bff,#6036ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.qr-premium-header p {
+  margin: 0;
+  color: #7182a3;
+  font-size: clamp(12px,1.15vw,16px);
+  line-height: 1.6;
+}
+
+.qr-premium-header p strong {
+  color: #172744;
+}
+
+.qr-premium-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns:
+    minmax(300px,.82fr)
+    minmax(420px,1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.qr-premium-preview {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 460px;
+  padding: 28px 20px;
+  border: 1px solid rgba(255,255,255,.92);
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.75),
+    rgba(244,248,255,.78)
+  );
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 12px 32px rgba(69,103,174,.06);
+  overflow: hidden;
+}
+
+.qr-preview-glow {
+  position: absolute;
+  z-index: -2;
+  width: 85%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(88,143,255,.20),
+      rgba(120,101,255,.08) 48%,
+      transparent 72%
+    );
+  filter: blur(8px);
+}
+
+.qr-preview-orbit {
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgba(117,133,255,.14);
+  border-radius: 50%;
+}
+
+.qr-orbit-a {
+  width: 92%;
+  aspect-ratio: 1;
+}
+
+.qr-orbit-b {
+  width: 75%;
+  aspect-ratio: 1;
+  border-color: rgba(80,173,255,.12);
+}
+
+.qr-preview-dot {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.qr-dot-a {
+  left: 9%;
+  top: 30%;
+  background: #9277ff;
+  box-shadow: 0 0 0 6px rgba(146,119,255,.09);
+}
+
+.qr-dot-b {
+  right: 13%;
+  bottom: 24%;
+  background: #66caff;
+  box-shadow: 0 0 0 6px rgba(102,202,255,.10);
+}
+
+.qr-premium-code {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: min(100%,310px);
+  aspect-ratio: 1;
+  padding: clamp(18px,2vw,27px);
+  border: 1px solid #edf1fb;
+  border-radius: 23px;
+  background: #fff;
+  box-shadow: 0 20px 55px rgba(28,47,91,.13);
+  animation: premiumQrIn .5s ease both;
+}
+
+.qr-premium-code svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.qr-premium-label {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 13px;
+  padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,.85);
+  border-radius: 30px;
+  background: rgba(255,255,255,.72);
+  color: #203353;
+  font-size: 12px;
+  font-weight: 750;
+  box-shadow: 0 7px 20px rgba(55,88,160,.06);
+}
+
+.qr-premium-label svg {
+  color: #356dff;
+}
+
+.qr-premium-details {
+  min-width: 0;
+  padding: 23px 25px;
+  border: 1px solid #e5ebf7;
+  border-radius: 23px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 13px 35px rgba(45,74,133,.075);
+}
+
+.qr-premium-detail-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #edf1f7;
+}
+
+.qr-premium-business-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: linear-gradient(145deg,#e8efff,#e8e8ff);
+  color: #2866ff;
+}
+
+.qr-premium-business-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.qr-premium-business-copy h2 {
+  margin: 0 0 4px;
+  color: #142343;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.qr-premium-business-copy p {
+  margin: 0;
+  color: #8b9ab5;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.qr-premium-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  padding: 8px 13px;
+  border-radius: 10px;
+  background: #e4f8eb;
+  color: #13733e;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.qr-premium-status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1eaa59;
+}
+
+.qr-premium-detail-row {
+  display: grid;
+  grid-template-columns:
+    28px
+    minmax(75px,1fr)
+    minmax(0,1.2fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 51px;
+  border-bottom: 1px solid #edf1f7;
+  color: #61728f;
+  font-size: 12px;
+}
+
+.qr-premium-row-icon {
+  display: grid;
+  place-items: center;
+  color: #263b60;
+}
+
+.qr-premium-detail-row strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
+  color: #162747;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.qr-premium-url {
+  padding: 14px 0 0;
+}
+
+.qr-premium-url-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 9px;
+  color: #61728f;
+  font-size: 12px;
+}
+
+.qr-premium-url-controls {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.qr-premium-url-controls input {
+  flex: 1;
+  min-width: 0;
+  height: 43px;
+  padding: 0 12px;
+  border: 1px solid #e1e8f3;
+  border-radius: 10px;
+  background: #f8faff;
+  color: #425473;
+  font-family: ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size: 10px;
+}
+
+.qr-premium-url-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  height: 43px;
+  padding: 0 13px;
+  border: 1px solid #dce7ff;
+  border-radius: 10px;
+  background: #edf3ff;
+  color: #2360ef;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .2s,transform .2s;
+}
+
+.qr-premium-url-controls button:hover {
+  background: #e0eaff;
+  transform: translateY(-1px);
+}
+
+.qr-premium-actions {
+  display: grid;
+  grid-template-columns:
+    minmax(0,.9fr)
+    minmax(0,1.1fr);
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.qr-premium-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 13px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform .2s,
+    box-shadow .2s,
+    filter .2s;
+}
+
+.qr-premium-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.qr-premium-actions .qr-download-button {
+  border: 1px solid #dfe7f4;
+  background: #fff;
+  color: #243959;
+}
+
+.qr-premium-actions .qr-download-button:hover {
+  box-shadow: 0 8px 18px rgba(33,62,117,.08);
+}
+
+.qr-premium-actions .qr-business-button {
+  border: 0;
+  background: linear-gradient(
+    105deg,
+    #2e9bff,
+    #315bff 55%,
+    #7135f5
+  );
+  color: #fff;
+  box-shadow: 0 9px 20px rgba(60,91,239,.20);
+}
+
+.qr-premium-actions .qr-business-button:hover {
+  filter: brightness(1.04);
+  box-shadow: 0 12px 24px rgba(60,91,239,.26);
+}
+
+.qr-premium-note {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 16px;
+  padding: 16px 20px;
+  border: 1px solid rgba(255,255,255,.95);
+  border-radius: 18px;
+  background: linear-gradient(
+    100deg,
+    rgba(255,255,255,.85),
+    rgba(237,246,255,.92)
+  );
+  box-shadow: 0 9px 25px rgba(45,85,155,.055);
+}
+
+.qr-note-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: linear-gradient(145deg,#e0ecff,#e3eaff);
+  color: #2674ff;
+}
+
+.qr-premium-note > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.qr-premium-note strong {
+  color: #182c4a;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.qr-premium-note span {
+  color: #687c9d;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+@keyframes premiumQrIn {
+  from {
+    opacity: 0;
+    transform: translateY(9px) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 1050px) {
+  .qr-premium-content {
+    grid-template-columns:
+      minmax(260px,.8fr)
+      minmax(0,1fr);
+  }
+
+  .qr-premium-details {
+    padding: 19px;
+  }
+
+  .qr-premium-preview {
+    min-height: 410px;
+  }
+
+  .qr-premium-code {
+    width: min(100%,275px);
+  }
+}
+
+@media (max-width: 800px) {
+  .qr-premium-content {
+    grid-template-columns:
+      minmax(0,1fr);
+  }
+
+  .qr-premium-preview {
+    min-height: 390px;
+  }
+
+  .qr-premium-code {
+    width: min(75vw,290px);
+  }
+
+  .qr-decoration-mark {
+    right: 35px;
+  }
+}
+
+@media (max-width: 520px) {
+  .qr-premium-success {
+    padding: 16px;
+    border-radius: 17px;
+  }
+
+  .qr-premium-header {
+    padding-bottom: 17px;
+  }
+
+  .qr-premium-header h1 {
+    font-size: 25px;
+  }
+
+  .qr-premium-header p {
+    font-size: 12px;
+    max-width: 95%;
+  }
+
+  .qr-decoration-mark {
+    width: 52px;
+    height: 52px;
+    right: 12px;
+    top: 16px;
+  }
+
+  .qr-decoration-mark svg {
+    width: 29px;
+  }
+
+  .qr-premium-preview {
+    min-height: 330px;
+    padding: 20px 12px;
+    border-radius: 17px;
+  }
+
+  .qr-premium-code {
+    width: min(76vw,250px);
+    padding: 16px;
+    border-radius: 17px;
+  }
+
+  .qr-premium-details {
+    padding: 16px;
+    border-radius: 17px;
+  }
+
+  .qr-premium-detail-title {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .qr-premium-business-icon {
+    width: 45px;
+    height: 45px;
+    flex-basis: 45px;
+  }
+
+  .qr-premium-business-copy {
+    flex: 1 1 calc(100% - 65px);
+  }
+
+  .qr-premium-business-copy h2 {
+    font-size: 16px;
+  }
+
+  .qr-premium-status {
+    margin-left: 55px;
+  }
+
+  .qr-premium-detail-row {
+    grid-template-columns:
+      22px
+      minmax(65px,.8fr)
+      minmax(0,1fr);
+    gap: 7px;
+    font-size: 11px;
+  }
+
+  .qr-premium-detail-row strong {
+    font-size: 11px;
+  }
+
+  .qr-premium-url-controls {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .qr-premium-url-controls input {
+    flex-basis: 100%;
+  }
+
+  .qr-premium-url-controls button {
+    flex: 1;
+  }
+
+  .qr-premium-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-premium-actions button {
+    min-height: 45px;
+  }
+
+  .qr-premium-note {
+    align-items: flex-start;
+    padding: 13px;
+    gap: 11px;
+  }
+
+  .qr-note-icon {
+    width: 43px;
+    height: 43px;
+    flex-basis: 43px;
+  }
+
+  .qr-premium-note span {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qr-premium-code {
+    animation: none;
+  }
+}
 
 /* =====================================================
    QR SUCCESS SCREEN — DESKTOP FIT-TO-VIEWPORT
-   Scoped only to the generated QR success screen.
-   Other Create Business stages and pages are untouched.
 ===================================================== */
+
 @media (min-width: 801px) {
   .create-business-page:has(.qr-premium-success) {
     width: 100%;
@@ -2957,12 +3641,18 @@
 
   .qr-premium-content {
     margin-top: 0;
-    grid-template-columns: minmax(0, .88fr) minmax(0, 1fr);
+    grid-template-columns:
+      minmax(0,.88fr)
+      minmax(0,1fr);
     gap: 12px;
   }
 
   .qr-premium-preview {
-    min-height: clamp(285px, calc(100vh - 565px), 350px);
+    min-height: clamp(
+      285px,
+      calc(100vh - 565px),
+      350px
+    );
     padding: 16px 14px;
     border-radius: 19px;
   }
@@ -3027,7 +3717,10 @@
 
   .qr-premium-detail-row {
     min-height: 39px;
-    grid-template-columns: 23px minmax(65px, 1fr) minmax(0, 1.2fr);
+    grid-template-columns:
+      23px
+      minmax(65px,1fr)
+      minmax(0,1.2fr);
     gap: 7px;
     font-size: 10px;
   }
@@ -3122,7 +3815,6 @@
   }
 }
 
-/* Short laptop screens: tighten vertical spacing further without clipping. */
 @media (min-width: 801px) and (max-height: 760px) {
   .qr-premium-success {
     padding: 12px;
@@ -3183,5 +3875,2368 @@
     flex-basis: 32px;
     width: 32px;
     height: 32px;
+  }
+}
+
+
+/* =====================================================
+   AI QUESTION COMPATIBILITY
+   Uses the ORIGINAL two-column question design.
+   8 questions left + 7 questions right on desktop.
+===================================================== */
+
+.ai-question-list {
+  width: 100% !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr)) !important;
+
+  gap: 11px !important;
+
+  max-height: none !important;
+
+  overflow: visible !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ai-question-item {
+  min-width: 0 !important;
+  min-height: 62px !important;
+
+  padding: 10px 13px !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 12px !important;
+
+  box-sizing: border-box !important;
+
+  border: 1px solid #e1e8f3 !important;
+
+  border-radius: 11px !important;
+
+  background: #ffffff !important;
+
+  color: #40516d !important;
+
+  text-align: left !important;
+
+  cursor: pointer !important;
+
+  transition:
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease !important;
+}
+
+.ai-question-item:hover {
+  border-color: #a9c2fa !important;
+
+  background: #f9fbff !important;
+
+  transform: translateY(-1px) !important;
+}
+
+.ai-question-item.selected {
+  border-color: #6694fa !important;
+
+  background: #f3f7ff !important;
+
+  box-shadow:
+    0 0 0 3px
+      rgba(49, 94, 219, .07) !important;
+}
+
+.ai-question-number {
+  width: 33px !important;
+  height: 33px !important;
+
+  flex-shrink: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 9px !important;
+
+  background: #edf2fa !important;
+
+  color: #64748b !important;
+
+  font-size: 10px !important;
+
+  font-weight: 800 !important;
+}
+
+.ai-question-item.selected
+.ai-question-number {
+  background: #dfeaff !important;
+
+  color: #285fe5 !important;
+}
+
+.ai-question-content {
+  min-width: 0 !important;
+
+  flex: 1 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  gap: 5px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  text-align: left !important;
+}
+
+.ai-question-content > strong {
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: #40516d !important;
+
+  font-size: 11px !important;
+
+  line-height: 1.45 !important;
+
+  font-weight: 700 !important;
+
+  white-space: normal !important;
+
+  overflow-wrap: break-word !important;
+}
+
+.ai-question-content > span {
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: #8090aa !important;
+
+  font-size: 9.5px !important;
+
+  line-height: 1.45 !important;
+
+  white-space: normal !important;
+
+  overflow-wrap: break-word !important;
+}
+
+.ai-question-check {
+  width: 23px !important;
+  height: 23px !important;
+
+  flex-shrink: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid #d5deeb !important;
+
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+
+  color: transparent !important;
+
+  font-size: 11px !important;
+
+  font-weight: 800 !important;
+
+  box-sizing: border-box !important;
+}
+
+.ai-question-item.selected
+.ai-question-check {
+  border-color: #2d61f3 !important;
+
+  background: #2d61f3 !important;
+
+  color: #ffffff !important;
+}
+
+
+/* Question heading/count */
+.questions-selection-header {
+  width: 100% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  gap: 15px !important;
+
+  margin-bottom: 14px !important;
+}
+
+.questions-selection-header > div {
+  min-width: 0 !important;
+}
+
+.questions-selection-header strong {
+  display: block !important;
+
+  margin: 0 !important;
+
+  color: #17233e !important;
+
+  font-size: 15px !important;
+
+  font-weight: 800 !important;
+
+  line-height: 1.3 !important;
+}
+
+.questions-selection-header span {
+  display: block !important;
+
+  margin-top: 4px !important;
+
+  color: #8998b0 !important;
+
+  font-size: 11px !important;
+
+  line-height: 1.4 !important;
+}
+
+.questions-selection-count {
+  flex-shrink: 0 !important;
+
+  min-width: 62px !important;
+
+  padding: 8px 12px !important;
+
+  margin-left: auto !important;
+
+  border: 1px solid #dbe7ff !important;
+
+  border-radius: 9px !important;
+
+  background: #edf3ff !important;
+
+  color: #285fe5 !important;
+
+  font-size: 11px !important;
+
+  font-weight: 800 !important;
+
+  text-align: center !important;
+}
+
+
+/* Error under questions */
+.create-question-error {
+  margin-top: 14px !important;
+}
+
+
+/* On desktop: preserve the original 2-column layout. */
+@media (min-width: 701px) {
+  .ai-question-list {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+
+/* On mobile only, return to one column. */
+@media (max-width: 700px) {
+  .ai-question-list {
+    grid-template-columns:
+      minmax(0, 1fr) !important;
+
+    gap: 9px !important;
+  }
+
+  .ai-question-item {
+    min-height: 58px !important;
+
+    padding: 9px 10px !important;
+
+    gap: 10px !important;
+  }
+
+  .ai-question-number {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .ai-question-content > strong {
+    font-size: 10.5px !important;
+  }
+
+  .ai-question-content > span {
+    font-size: 9px !important;
+  }
+
+  .ai-question-check {
+    width: 21px !important;
+    height: 21px !important;
+  }
+}
+/* =========================================================
+   FINAL CREATE BUSINESS ALIGNMENT + BUTTON FIX
+   Put this at the VERY END of CreateBusiness.css
+========================================================= */
+
+/* ---------- MAIN CONTENT ALIGNMENT ---------- */
+
+.create-business-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 18px 28px 30px !important;
+}
+
+.create-business-header,
+.create-stepper,
+.create-business-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* ---------- CARD ---------- */
+
+.create-business-card {
+  overflow: hidden !important;
+}
+
+/* ---------- FORM ALIGNMENT ---------- */
+
+.create-form {
+  width: 100% !important;
+  padding: 24px 28px !important;
+}
+
+.create-form-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 18px 24px !important;
+}
+
+.create-field {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.create-field-full {
+  grid-column: 1 / -1 !important;
+}
+
+/* ---------- CATEGORY FIELD ---------- */
+
+.create-field > div {
+  min-width: 0;
+}
+
+/* ---------- INPUTS / SELECTS ---------- */
+
+.create-field input,
+.create-field select,
+.create-field textarea {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ---------- CATEGORY + BUTTON ROW ---------- */
+
+.create-field .category-select-row,
+.create-field .field-with-button {
+  width: 100%;
+}
+
+/* ---------- FOOTER ---------- */
+
+.create-card-footer {
+  width: 100% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+
+  gap: 10px !important;
+
+  padding: 14px 28px !important;
+
+  border-top: 1px solid #edf1f7 !important;
+
+  background: #ffffff !important;
+}
+
+/* =========================================================
+   BUTTON FIX
+========================================================= */
+
+.create-card-footer button {
+  box-sizing: border-box !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 8px !important;
+
+  height: 43px !important;
+  min-height: 43px !important;
+
+  padding: 0 18px !important;
+
+  border-radius: 10px !important;
+
+  font-family: inherit !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease !important;
+}
+
+/* ---------- CANCEL ---------- */
+
+.create-card-footer
+.create-cancel-button {
+  border: 1px solid #dce4f0 !important;
+
+  background: #ffffff !important;
+
+  color: #596982 !important;
+
+  box-shadow: none !important;
+}
+
+.create-card-footer
+.create-cancel-button:hover {
+  background: #f7f9fd !important;
+
+  border-color: #bcc9dd !important;
+}
+
+/* ---------- GENERATE QUESTIONS ---------- */
+
+.create-card-footer
+.create-primary-button {
+  border: 1px solid #2d61f3 !important;
+
+  background: linear-gradient(
+    105deg,
+    #438cff,
+    #2455f5
+  ) !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 8px 18px
+      rgba(45, 97, 243, .20) !important;
+}
+
+.create-card-footer
+.create-primary-button:hover {
+  background: linear-gradient(
+    105deg,
+    #347bf3,
+    #1d49df
+  ) !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 10px 22px
+      rgba(45, 97, 243, .26) !important;
+
+  transform: translateY(-1px) !important;
+}
+
+.create-card-footer
+.create-primary-button svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* =========================================================
+   CATEGORY PLUS BUTTON
+========================================================= */
+
+.create-field button[type="button"] {
+  box-sizing: border-box !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 42px !important;
+
+  width: 42px !important;
+  min-width: 42px !important;
+
+  height: 42px !important;
+  min-height: 42px !important;
+
+  padding: 0 !important;
+
+  border: 1px solid #dbe3f0 !important;
+
+  border-radius: 10px !important;
+
+  background: #f7f9ff !important;
+
+  color: #2864e8 !important;
+
+  font-family: inherit !important;
+
+  font-size: 24px !important;
+
+  font-weight: 700 !important;
+
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+
+  box-shadow: none !important;
+}
+
+.create-field button[type="button"]:hover {
+  border-color: #a9c2fa !important;
+
+  background: #edf3ff !important;
+
+  color: #2458db !important;
+}
+
+/* =========================================================
+   CATEGORY SELECT + PLUS ALIGNMENT
+========================================================= */
+
+.create-field
+div[style*="display: flex"] {
+  width: 100% !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 8px !important;
+}
+
+.create-field
+div[style*="display: flex"]
+select {
+  flex: 1 1 auto !important;
+
+  width: auto !important;
+
+  min-width: 0 !important;
+}
+
+/* =========================================================
+   STEP HEADER
+========================================================= */
+
+.create-card-heading {
+  width: auto !important;
+  margin: 14px 15px 0 !important;
+}
+
+/* =========================================================
+   GOOGLE REVIEW URL
+========================================================= */
+
+.create-field-help {
+  display: block !important;
+
+  margin-top: 7px !important;
+
+  color: #91a0b8 !important;
+
+  font-size: 10px !important;
+
+  line-height: 1.4 !important;
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 1001px) {
+  .create-business-page {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+
+  .create-form-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr) !important;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .create-business-page {
+    padding: 18px !important;
+  }
+
+  .create-form {
+    padding: 20px !important;
+  }
+
+  .create-form-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr) !important;
+  }
+
+  .create-card-footer {
+    padding: 13px 20px !important;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .create-business-page {
+    padding: 13px !important;
+  }
+
+  .create-form {
+    padding: 17px 13px !important;
+  }
+
+  .create-form-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .create-field-full {
+    grid-column: auto !important;
+  }
+
+  .create-card-footer {
+    padding: 12px 13px !important;
+  }
+
+  .create-card-footer button {
+    min-height: 41px !important;
+    height: 41px !important;
+  }
+}
+/* ==========================================================
+   FINAL CREATE BUSINESS UI FIX
+   ----------------------------------------------------------
+   Fixes:
+   - Proper gap between card edge and form text
+   - Smaller, cleaner labels
+   - Smaller input/select text
+   - Proper spacing on Step 1
+   - Proper spacing on Step 2 question page
+   - Keeps Category + button only
+   - Does NOT change QR success design
+========================================================== */
+
+
+/* ==========================================================
+   MAIN PAGE
+========================================================== */
+
+.create-business-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+
+/* ==========================================================
+   MAIN BUSINESS CARD
+========================================================== */
+
+.create-business-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* ==========================================================
+   CARD HEADING
+========================================================== */
+
+.create-business-card .create-card-heading {
+  width: auto !important;
+
+  margin: 14px 15px 0 !important;
+
+  padding: 16px 20px !important;
+
+  min-height: 82px !important;
+
+  box-sizing: border-box !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 14px !important;
+}
+
+.create-business-card .create-card-heading h2 {
+  margin: 0 !important;
+
+  color: #17233e !important;
+
+  font-family: inherit !important;
+
+  font-size: 17px !important;
+
+  line-height: 1.3 !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: 0 !important;
+}
+
+.create-business-card .create-card-heading p {
+  margin: 4px 0 0 !important;
+
+  color: #8993a2 !important;
+
+  font-family: inherit !important;
+
+  font-size: 9.5px !important;
+
+  line-height: 1.4 !important;
+
+  font-weight: 400 !important;
+}
+
+
+/* ==========================================================
+   STEP 1 FORM
+   IMPORTANT:
+   This creates the actual gap from the card edge.
+========================================================== */
+
+.create-business-card .create-form {
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 23px 27px !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* ==========================================================
+   IF CREATE-FORM-GRID IS DIRECTLY INSIDE THE CARD
+   This protects against both JSX versions.
+========================================================== */
+
+.create-business-card > .create-form-grid {
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 23px 27px !important;
+
+  box-sizing: border-box !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr) !important;
+
+  column-gap: 22px !important;
+
+  row-gap: 17px !important;
+}
+
+
+/* ==========================================================
+   NORMAL FORM GRID
+========================================================== */
+
+.create-business-card .create-form .create-form-grid {
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  box-sizing: border-box !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr) !important;
+
+  column-gap: 22px !important;
+
+  row-gap: 17px !important;
+}
+
+
+/* ==========================================================
+   FIELDS
+========================================================== */
+
+.create-business-card .create-field {
+  width: 100% !important;
+
+  min-width: 0 !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  box-sizing: border-box !important;
+
+  display: flex !important;
+
+  flex-direction: column !important;
+}
+
+.create-business-card .create-field-full {
+  grid-column: 1 / -1 !important;
+}
+
+
+/* ==========================================================
+   LABELS
+   Smaller + cleaner
+========================================================== */
+
+.create-business-card .create-field label {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 0 0 6px !important;
+
+  padding: 0 !important;
+
+  color: #263754 !important;
+
+  font-family: inherit !important;
+
+  font-size: 10px !important;
+
+  line-height: 1.35 !important;
+
+  font-weight: 700 !important;
+}
+
+.create-business-card .create-field label span {
+  margin-left: 3px !important;
+
+  color: #ef4444 !important;
+}
+
+
+/* ==========================================================
+   INPUTS / SELECTS / TEXTAREA
+========================================================== */
+
+.create-business-card .create-field input,
+.create-business-card .create-field select,
+.create-business-card .create-field textarea {
+  width: 100% !important;
+
+  max-width: 100% !important;
+
+  min-width: 0 !important;
+
+  box-sizing: border-box !important;
+
+  margin: 0 !important;
+
+  border: 1px solid #dce4f0 !important;
+
+  border-radius: 9px !important;
+
+  background: #ffffff !important;
+
+  color: #344054 !important;
+
+  font-family: inherit !important;
+
+  font-size: 11px !important;
+
+  line-height: 1.4 !important;
+}
+
+
+/* Input / Select height */
+
+.create-business-card .create-field input,
+.create-business-card .create-field select {
+  height: 44px !important;
+
+  padding: 0 12px !important;
+}
+
+
+/* Textarea */
+
+.create-business-card .create-field textarea {
+  min-height: 84px !important;
+
+  padding: 11px 12px !important;
+}
+
+
+/* Placeholder */
+
+.create-business-card
+.create-field
+input::placeholder,
+.create-business-card
+.create-field
+textarea::placeholder {
+  color: #9aa8bf !important;
+
+  opacity: 1 !important;
+}
+
+
+/* Focus */
+
+.create-business-card
+.create-field
+input:focus,
+.create-business-card
+.create-field
+select:focus,
+.create-business-card
+.create-field
+textarea:focus {
+  outline: none !important;
+
+  border-color: #8ca7ed !important;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(49, 94, 219, 0.07) !important;
+}
+
+
+/* ==========================================================
+   CATEGORY / BUSINESS TYPE / SPECIALIZATION ROW
+========================================================== */
+
+.create-business-card
+.create-field
+> div[style*="display: flex"] {
+  width: 100% !important;
+
+  min-width: 0 !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 8px !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* Select inside row */
+
+.create-business-card
+.create-field
+> div[style*="display: flex"]
+select {
+  flex: 1 1 auto !important;
+
+  width: auto !important;
+
+  min-width: 0 !important;
+}
+
+
+/* ==========================================================
+   CATEGORY + BUTTON
+   Only Category has +
+========================================================== */
+
+.create-business-card
+.create-field
+button[type="button"] {
+  flex: 0 0 42px !important;
+
+  width: 42px !important;
+
+  min-width: 42px !important;
+
+  height: 42px !important;
+
+  min-height: 42px !important;
+
+  padding: 0 !important;
+
+  margin: 0 !important;
+
+  box-sizing: border-box !important;
+
+  display: inline-flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  border: 1px solid #dbe3f0 !important;
+
+  border-radius: 10px !important;
+
+  background: #f7f9ff !important;
+
+  color: #2864e8 !important;
+
+  font-family: inherit !important;
+
+  font-size: 22px !important;
+
+  font-weight: 700 !important;
+
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+
+  box-shadow: none !important;
+}
+
+.create-business-card
+.create-field
+button[type="button"]:hover {
+  background: #edf3ff !important;
+
+  border-color: #a9c2fa !important;
+
+  color: #2458db !important;
+}
+
+
+/* ==========================================================
+   ERROR TEXT
+========================================================== */
+
+.create-business-card .create-field small {
+  display: block !important;
+
+  margin-top: 5px !important;
+
+  color: #d9485f !important;
+
+  font-family: inherit !important;
+
+  font-size: 8.5px !important;
+
+  line-height: 1.35 !important;
+}
+
+
+/* ==========================================================
+   HELP TEXT
+========================================================== */
+
+.create-business-card .create-field-help {
+  display: block !important;
+
+  margin-top: 6px !important;
+
+  color: #91a0b8 !important;
+
+  font-family: inherit !important;
+
+  font-size: 8.5px !important;
+
+  line-height: 1.45 !important;
+}
+
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.create-business-card .create-card-footer {
+  width: 100% !important;
+
+  min-height: 69px !important;
+
+  padding: 13px 27px !important;
+
+  box-sizing: border-box !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: flex-end !important;
+
+  gap: 9px !important;
+
+  border-top: 1px solid #edf0f3 !important;
+
+  background: #ffffff !important;
+}
+
+
+/* ==========================================================
+   FOOTER BUTTONS
+========================================================== */
+
+.create-business-card
+.create-card-footer
+button {
+  height: 40px !important;
+
+  min-height: 40px !important;
+
+  padding: 0 17px !important;
+
+  box-sizing: border-box !important;
+
+  display: inline-flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  gap: 7px !important;
+
+  border-radius: 8px !important;
+
+  font-family: inherit !important;
+
+  font-size: 10px !important;
+
+  font-weight: 750 !important;
+
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+}
+
+
+/* Cancel */
+
+.create-business-card
+.create-card-footer
+.create-cancel-button {
+  border: 1px solid #dfe4eb !important;
+
+  background: #ffffff !important;
+
+  color: #596273 !important;
+
+  box-shadow: none !important;
+}
+
+
+/* Generate Questions */
+
+.create-business-card
+.create-card-footer
+.create-primary-button {
+  border: 1px solid #315edb !important;
+
+  background: #315edb !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 5px 14px
+    rgba(49, 94, 219, 0.17) !important;
+}
+
+.create-business-card
+.create-card-footer
+.create-primary-button:hover {
+  background: #2851c5 !important;
+
+  color: #ffffff !important;
+}
+
+.create-business-card
+.create-card-footer
+.create-primary-button svg {
+  color: #ffffff !important;
+
+  stroke: #ffffff !important;
+}
+
+
+/* ==========================================================
+   STEP 2 — QUESTION PAGE
+   SAME LEFT / RIGHT GAP AS STEP 1
+========================================================== */
+
+.create-business-card .create-question-area {
+  width: 100% !important;
+
+  box-sizing: border-box !important;
+
+  padding: 22px 27px !important;
+
+  margin: 0 !important;
+}
+
+
+/* Question header */
+
+.questions-selection-header {
+  width: 100% !important;
+
+  margin: 0 0 14px !important;
+
+  padding: 0 !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: space-between !important;
+
+  gap: 15px !important;
+}
+
+.questions-selection-header strong {
+  display: block !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  color: #17233e !important;
+
+  font-family: inherit !important;
+
+  font-size: 13px !important;
+
+  line-height: 1.3 !important;
+
+  font-weight: 800 !important;
+}
+
+.questions-selection-header span {
+  display: block !important;
+
+  margin-top: 3px !important;
+
+  color: #8998b0 !important;
+
+  font-family: inherit !important;
+
+  font-size: 9.5px !important;
+
+  line-height: 1.4 !important;
+}
+
+
+/* Question count */
+
+.questions-selection-count {
+  flex-shrink: 0 !important;
+
+  min-width: 58px !important;
+
+  margin-left: auto !important;
+
+  padding: 7px 10px !important;
+
+  border: 1px solid #dbe7ff !important;
+
+  border-radius: 8px !important;
+
+  background: #edf3ff !important;
+
+  color: #285fe5 !important;
+
+  font-size: 9.5px !important;
+
+  font-weight: 800 !important;
+
+  text-align: center !important;
+}
+
+
+/* ==========================================================
+   AI QUESTION LIST
+========================================================== */
+
+.ai-question-list {
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr)) !important;
+
+  gap: 9px !important;
+
+  max-height: none !important;
+
+  overflow: visible !important;
+}
+
+
+/* Question card */
+
+.ai-question-item {
+  width: 100% !important;
+
+  min-width: 0 !important;
+
+  min-height: 55px !important;
+
+  padding: 8px 10px !important;
+
+  box-sizing: border-box !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 9px !important;
+
+  border: 1px solid #e3e7ed !important;
+
+  border-radius: 9px !important;
+
+  background: #ffffff !important;
+
+  color: #40516d !important;
+
+  text-align: left !important;
+
+  cursor: pointer !important;
+
+  transition:
+    border-color .15s ease,
+    background .15s ease,
+    box-shadow .15s ease !important;
+}
+
+.ai-question-item:hover {
+  border-color: #b9c9ee !important;
+
+  background: #fbfcff !important;
+}
+
+.ai-question-item.selected {
+  border-color: #8ca7ed !important;
+
+  background: #f5f8ff !important;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(49, 94, 219, 0.05) !important;
+}
+
+
+/* Number */
+
+.ai-question-number {
+  width: 28px !important;
+
+  height: 28px !important;
+
+  flex: 0 0 28px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  border-radius: 7px !important;
+
+  background: #f0f3f7 !important;
+
+  color: #7d8796 !important;
+
+  font-size: 8px !important;
+
+  font-weight: 800 !important;
+}
+
+.ai-question-item.selected
+.ai-question-number {
+  background: #e2ebff !important;
+
+  color: #315edb !important;
+}
+
+
+/* Question content */
+
+.ai-question-content {
+  min-width: 0 !important;
+
+  flex: 1 !important;
+
+  display: flex !important;
+
+  flex-direction: column !important;
+
+  gap: 3px !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  text-align: left !important;
+}
+
+.ai-question-content > strong {
+  display: block !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  color: #40516d !important;
+
+  font-family: inherit !important;
+
+  font-size: 10px !important;
+
+  line-height: 1.4 !important;
+
+  font-weight: 700 !important;
+
+  white-space: normal !important;
+
+  overflow-wrap: break-word !important;
+}
+
+.ai-question-content > span {
+  display: block !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  color: #8090aa !important;
+
+  font-family: inherit !important;
+
+  font-size: 8.5px !important;
+
+  line-height: 1.4 !important;
+
+  white-space: normal !important;
+
+  overflow-wrap: break-word !important;
+}
+
+
+/* Check */
+
+.ai-question-check {
+  width: 21px !important;
+
+  height: 21px !important;
+
+  flex: 0 0 21px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  border: 1px solid #dce2e9 !important;
+
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+
+  color: transparent !important;
+
+  font-size: 9px !important;
+
+  font-weight: 800 !important;
+}
+
+.ai-question-item.selected
+.ai-question-check {
+  border-color: #315edb !important;
+
+  background: #315edb !important;
+
+  color: #ffffff !important;
+}
+
+
+/* Question error */
+
+.create-business-card .create-question-error {
+  margin-top: 12px !important;
+
+  padding: 9px 11px !important;
+
+  font-size: 9px !important;
+}
+
+
+/* ==========================================================
+   REVIEW PAGE
+========================================================== */
+
+.create-business-card .review-summary {
+  padding: 22px 27px !important;
+
+  box-sizing: border-box !important;
+}
+
+.create-business-card .review-selected-questions {
+  margin-top: 18px !important;
+}
+
+.create-business-card
+.review-selected-questions h3 {
+  font-size: 13px !important;
+}
+
+.create-business-card
+.review-selected-header p {
+  font-size: 9px !important;
+}
+
+.create-business-card
+.review-question p {
+  font-size: 8.5px !important;
+}
+
+
+/* ==========================================================
+   DESKTOP
+========================================================== */
+
+@media (min-width: 901px) {
+
+  .create-business-card .create-form {
+    padding-left: 27px !important;
+
+    padding-right: 27px !important;
+  }
+
+  .create-business-card .create-form-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr) !important;
+
+    column-gap: 22px !important;
+  }
+
+  .create-business-card .create-question-area {
+    padding-left: 27px !important;
+
+    padding-right: 27px !important;
+  }
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+  .create-business-card .create-form {
+    padding: 20px 22px !important;
+  }
+
+  .create-business-card .create-form-grid {
+    column-gap: 18px !important;
+  }
+
+  .create-business-card .create-card-heading {
+    padding-left: 20px !important;
+
+    padding-right: 20px !important;
+  }
+
+  .create-business-card .create-question-area {
+    padding: 20px 22px !important;
+  }
+
+  .create-business-card .create-card-footer {
+    padding-left: 22px !important;
+
+    padding-right: 22px !important;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 700px) {
+
+  .create-business-card .create-card-heading {
+    margin: 12px 12px 0 !important;
+
+    padding: 14px 15px !important;
+
+    min-height: 76px !important;
+  }
+
+  .create-business-card .create-card-heading h2 {
+    font-size: 15px !important;
+  }
+
+  .create-business-card .create-card-heading p {
+    font-size: 8.5px !important;
+  }
+
+  .create-business-card .create-form {
+    padding: 17px 15px !important;
+  }
+
+  .create-business-card .create-form-grid,
+  .create-business-card > .create-form-grid {
+    grid-template-columns:
+      minmax(0, 1fr) !important;
+
+    column-gap: 0 !important;
+
+    row-gap: 14px !important;
+  }
+
+  .create-business-card > .create-form-grid {
+    padding: 17px 15px !important;
+  }
+
+  .create-business-card .create-field-full {
+    grid-column: auto !important;
+  }
+
+  .create-business-card .create-question-area {
+    padding: 18px 15px !important;
+  }
+
+  .ai-question-list {
+    grid-template-columns:
+      minmax(0, 1fr) !important;
+
+    gap: 8px !important;
+  }
+
+  .ai-question-item {
+    min-height: 53px !important;
+
+    padding: 8px 9px !important;
+  }
+
+  .ai-question-content > strong {
+    font-size: 9.5px !important;
+  }
+
+  .ai-question-content > span {
+    font-size: 8px !important;
+  }
+
+  .create-business-card .create-card-footer {
+    padding: 12px 15px !important;
+  }
+}
+/* ==========================================================
+   FINAL AI QUESTION SELECTION FIX
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   QUESTION HEADER
+---------------------------------------------------------- */
+
+.create-business-card .questions-selection-header {
+  width: calc(100% - 56px) !important;
+
+  margin: 0 28px 14px !important;
+
+  padding: 0 !important;
+
+  box-sizing: border-box !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: space-between !important;
+
+  gap: 16px !important;
+}
+
+
+/* Heading */
+
+.create-business-card
+.questions-selection-header
+strong {
+  display: block !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  color: #17233e !important;
+
+  font-size: 15px !important;
+
+  line-height: 1.3 !important;
+
+  font-weight: 800 !important;
+}
+
+
+/* Subtitle */
+
+.create-business-card
+.questions-selection-header
+span {
+  display: block !important;
+
+  margin: 4px 0 0 !important;
+
+  padding: 0 !important;
+
+  color: #8998b0 !important;
+
+  font-size: 10px !important;
+
+  line-height: 1.4 !important;
+}
+
+
+/* ----------------------------------------------------------
+   QUESTION COUNT
+---------------------------------------------------------- */
+
+.create-business-card
+.questions-selection-count {
+  flex-shrink: 0 !important;
+
+  min-width: 58px !important;
+
+  height: 32px !important;
+
+  padding: 0 10px !important;
+
+  margin: 0 !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  border: 1px solid #dbe7ff !important;
+
+  border-radius: 9px !important;
+
+  background: #edf3ff !important;
+
+  color: #285fe5 !important;
+
+  font-size: 10px !important;
+
+  font-weight: 800 !important;
+
+  line-height: 1 !important;
+}
+
+
+/* ----------------------------------------------------------
+   QUESTION LIST
+   2 COLUMNS
+---------------------------------------------------------- */
+
+.create-business-card .ai-question-list {
+  width: calc(100% - 56px) !important;
+
+  margin: 0 28px !important;
+
+  padding: 0 !important;
+
+  box-sizing: border-box !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr)) !important;
+
+  column-gap: 11px !important;
+
+  row-gap: 10px !important;
+
+  max-height: none !important;
+
+  overflow: visible !important;
+}
+
+
+/* ----------------------------------------------------------
+   EACH QUESTION
+---------------------------------------------------------- */
+
+.create-business-card .ai-question-item {
+  width: 100% !important;
+
+  min-width: 0 !important;
+
+  min-height: 64px !important;
+
+  margin: 0 !important;
+
+  padding: 10px 13px !important;
+
+  box-sizing: border-box !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 11px !important;
+
+  border: 1px solid #e1e8f3 !important;
+
+  border-radius: 10px !important;
+
+  background: #ffffff !important;
+
+  color: #40516d !important;
+
+  text-align: left !important;
+
+  cursor: pointer !important;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease !important;
+}
+
+
+/* Hover */
+
+.create-business-card .ai-question-item:hover {
+  border-color: #a9c2fa !important;
+
+  background: #f9fbff !important;
+
+  transform: none !important;
+}
+
+
+/* Selected */
+
+.create-business-card
+.ai-question-item.selected {
+  border-color: #6694fa !important;
+
+  background: #f3f7ff !important;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(49, 94, 219, 0.06) !important;
+}
+
+
+/* ----------------------------------------------------------
+   QUESTION NUMBER
+---------------------------------------------------------- */
+
+.create-business-card .ai-question-number {
+  width: 33px !important;
+
+  height: 33px !important;
+
+  min-width: 33px !important;
+
+  flex: 0 0 33px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  border-radius: 8px !important;
+
+  background: #edf2fa !important;
+
+  color: #64748b !important;
+
+  font-size: 9px !important;
+
+  font-weight: 800 !important;
+}
+
+
+/* Selected number */
+
+.create-business-card
+.ai-question-item.selected
+.ai-question-number {
+  background: #dfeaff !important;
+
+  color: #285fe5 !important;
+}
+
+
+/* ----------------------------------------------------------
+   QUESTION TEXT
+---------------------------------------------------------- */
+
+.create-business-card .ai-question-content {
+  min-width: 0 !important;
+
+  flex: 1 1 auto !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  display: block !important;
+
+  text-align: left !important;
+}
+
+
+/* ONLY QUESTION TEXT */
+
+.create-business-card
+.ai-question-content
+> strong {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  color: #40516d !important;
+
+  font-size: 10.5px !important;
+
+  line-height: 1.45 !important;
+
+  font-weight: 700 !important;
+
+  white-space: normal !important;
+
+  overflow-wrap: break-word !important;
+}
+
+
+/* ----------------------------------------------------------
+   HIDE OPTIONS COMPLETELY
+   ----------------------------------------------------------
+   This is an extra safety rule.
+   Even if the JSX option span still exists,
+   it will NOT appear on the screen.
+---------------------------------------------------------- */
+
+.create-business-card
+.ai-question-content
+> span {
+  display: none !important;
+}
+
+
+/* ----------------------------------------------------------
+   CHECK CIRCLE
+---------------------------------------------------------- */
+
+.create-business-card .ai-question-check {
+  width: 23px !important;
+
+  height: 23px !important;
+
+  min-width: 23px !important;
+
+  flex: 0 0 23px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  border: 1px solid #d5deeb !important;
+
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+
+  color: transparent !important;
+
+  font-size: 10px !important;
+
+  font-weight: 800 !important;
+}
+
+
+/* Selected check */
+
+.create-business-card
+.ai-question-item.selected
+.ai-question-check {
+  border-color: #2d61f3 !important;
+
+  background: #2d61f3 !important;
+
+  color: #ffffff !important;
+}
+
+
+/* ----------------------------------------------------------
+   FOOTER
+---------------------------------------------------------- */
+
+.create-business-card .create-card-footer {
+  width: 100% !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 700px) {
+
+  .create-business-card
+  .questions-selection-header {
+    width: calc(100% - 30px) !important;
+
+    margin-left: 15px !important;
+
+    margin-right: 15px !important;
+
+    margin-bottom: 12px !important;
+  }
+
+
+  .create-business-card .ai-question-list {
+    width: calc(100% - 30px) !important;
+
+    margin-left: 15px !important;
+
+    margin-right: 15px !important;
+
+    grid-template-columns:
+      minmax(0, 1fr) !important;
+
+    gap: 8px !important;
+  }
+
+
+  .create-business-card .ai-question-item {
+    min-height: 58px !important;
+
+    padding: 9px 10px !important;
+
+    gap: 9px !important;
+  }
+
+
+  .create-business-card .ai-question-number {
+    width: 30px !important;
+
+    height: 30px !important;
+
+    min-width: 30px !important;
+
+    flex-basis: 30px !important;
+  }
+
+
+  .create-business-card
+  .ai-question-content
+  > strong {
+    font-size: 10px !important;
+
+    line-height: 1.4 !important;
+  }
+
+
+  .create-business-card .ai-question-check {
+    width: 21px !important;
+
+    height: 21px !important;
+
+    min-width: 21px !important;
+
+    flex-basis: 21px !important;
+  }
+}
+/* ==========================================================
+   FINAL REVIEW PAGE ALIGNMENT FIX
+   ========================================================== */
+
+/* Business information container */
+.create-business-page .review-business-info {
+  width: 100% !important;
+  margin-top: 20px !important;
+}
+
+/* Business information heading */
+.create-business-page .review-business-info h3 {
+  display: block !important;
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+
+  color: #1d2e4d !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.4 !important;
+}
+
+/* Information grid */
+.create-business-page .review-info-grid {
+  width: 100% !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr)) !important;
+
+  gap: 11px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Each information box */
+.create-business-page .review-info-grid > div {
+  width: 100% !important;
+  min-width: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  padding: 13px 15px !important;
+  margin: 0 !important;
+
+  border: 1px solid #e3eaf4 !important;
+  border-radius: 10px !important;
+
+  background: #ffffff !important;
+}
+
+/* Label */
+.create-business-page .review-info-grid > div > span {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: #8998b0 !important;
+
+  font-size: 9px !important;
+  font-weight: 600 !important;
+
+  line-height: 1.4 !important;
+
+  text-align: left !important;
+}
+
+/* Value */
+.create-business-page .review-info-grid > div > strong {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 5px 0 0 0 !important;
+  padding: 0 !important;
+
+  color: #34445f !important;
+
+  font-size: 11px !important;
+  font-weight: 700 !important;
+
+  line-height: 1.45 !important;
+
+  text-align: left !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Google Review URL gets full width */
+.create-business-page
+.review-info-grid
+.review-info-full {
+  grid-column: 1 / -1 !important;
+}
+
+/* ==========================================================
+   REVIEW SUMMARY TOP
+   ========================================================== */
+
+.create-business-page .review-summary-top {
+  width: 100% !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    1.4fr 1fr 0.7fr 0.8fr !important;
+
+  gap: 1px !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid #e4eaf4 !important;
+  border-radius: 11px !important;
+
+  background: #e4eaf4 !important;
+}
+
+.create-business-page .review-summary-top > div {
+  min-width: 0 !important;
+
+  min-height: 75px !important;
+
+  padding: 14px 16px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  align-items: flex-start !important;
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  background: #ffffff !important;
+}
+
+.create-business-page .review-summary-top > div > span {
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: #8998b0 !important;
+
+  font-size: 9px !important;
+  font-weight: 700 !important;
+
+  line-height: 1.4 !important;
+}
+
+.create-business-page .review-summary-top > div > strong {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 6px 0 0 0 !important;
+  padding: 0 !important;
+
+  color: #263754 !important;
+
+  font-size: 11px !important;
+  font-weight: 800 !important;
+
+  line-height: 1.4 !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 700px) {
+
+  .create-business-page .review-info-grid {
+    grid-template-columns:
+      minmax(0, 1fr) !important;
+  }
+
+  .create-business-page
+  .review-info-grid
+  .review-info-full {
+    grid-column: auto !important;
+  }
+
+  .create-business-page .review-summary-top {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .create-business-page .review-summary-top > div {
+    min-height: 65px !important;
+    padding: 11px !important;
+  }
+
+  .create-business-page
+  .review-summary-top
+  > div
+  > strong {
+    font-size: 10px !important;
   }
 }

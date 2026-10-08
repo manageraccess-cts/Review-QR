@@ -1,5 +1,4 @@
-
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "/api";
 
 /* =========================================================
    API REQUEST HELPER
@@ -133,9 +132,11 @@ export const getBusinesses = async () => {
   return apiRequest("/businesses");
 };
 
+
 export const getBusiness = async (id) => {
   return apiRequest(`/businesses/${id}`);
 };
+
 
 export const createBusiness = async (businessData) => {
   return apiRequest("/businesses", {
@@ -144,6 +145,7 @@ export const createBusiness = async (businessData) => {
   });
 };
 
+
 export const updateBusiness = async (id, businessData) => {
   return apiRequest(`/businesses/${id}`, {
     method: "PUT",
@@ -151,9 +153,40 @@ export const updateBusiness = async (id, businessData) => {
   });
 };
 
+
 export const deleteBusiness = async (id) => {
   return apiRequest(`/businesses/${id}`, {
     method: "DELETE",
+  });
+};
+
+
+/* =========================================================
+   AI QUESTION GENERATION
+   Generates 15 questions with 4 answer options each
+   for the selected business category/type/specialization.
+
+   IMPORTANT:
+   - Requires admin authentication.
+   - AI is called during business creation.
+   - Generated questions are then stored with the business.
+   - Customers do NOT call this endpoint.
+========================================================= */
+
+export const generateQuestions = async ({
+  category,
+  businessType,
+  specialization = "",
+  businessName = "",
+}) => {
+  return apiRequest("/questions/generate", {
+    method: "POST",
+    body: JSON.stringify({
+      category,
+      businessType,
+      specialization,
+      businessName,
+    }),
   });
 };
 
