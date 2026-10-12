@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const OpenAI = require("openai");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 dotenv.config();
 
@@ -15,6 +17,27 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const JWT_SECRET = process.env.JWT_SECRET;
 const MONGODB_URI = process.env.MONGODB_URI;
+
+const EMAIL_HOST = process.env.EMAIL_HOST || "smtp.gmail.com";
+const EMAIL_PORT = Number(process.env.EMAIL_PORT || 465);
+const EMAIL_SECURE = process.env.EMAIL_SECURE !== "false";
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_APP_PASSWORD = process.env.EMAIL_APP_PASSWORD;
+const FRONTEND_URL =
+  process.env.FRONTEND_URL || "http://localhost:5173";
+
+const emailTransporter =
+  EMAIL_USER && EMAIL_APP_PASSWORD
+    ? nodemailer.createTransport({
+        host: EMAIL_HOST,
+        port: EMAIL_PORT,
+        secure: EMAIL_SECURE,
+        auth: {
+          user: EMAIL_USER,
+          pass: EMAIL_APP_PASSWORD.replace(/\s/g, ""),
+        },
+      })
+    : null;
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL =
@@ -210,6 +233,21 @@ const adminCredentialSchema =
       passwordHash: {
         type: String,
         required: true,
+      },
+
+      resetOtpHash: {
+        type: String,
+        default: undefined,
+      },
+      
+      resetOtpExpires: {
+        type: Date,
+        default: undefined,
+      },
+
+      resetOtpVerifiedAt: {
+        type: Date,
+        default: undefined,
       },
     },
     {
@@ -976,19 +1014,14 @@ app.get(
   (req, res) => {
     res.json({
       success: true,
-
       admin: {
-        email:
-          req.admin.email,
-
-        role:
-          req.admin.role,
+        email: req.admin.email,
+        role: req.admin.role,
       },
     });
   }
 );
-
-// --------------------------------------------------
+  // --------------------------------------------------
 // CHANGE ADMIN PASSWORD
 // --------------------------------------------------
 
@@ -1002,10 +1035,7 @@ app.put(
         newPassword,
       } = req.body;
 
-      if (
-        !currentPassword ||
-        !newPassword
-      ) {
+      if (!currentPassword || !newPassword) {
         return res.status(400).json({
           success: false,
           message:
@@ -1013,11 +1043,7 @@ app.put(
         });
       }
 
-      if (
-        String(
-          newPassword
-        ).length < 8
-      ) {
+      if (String(newPassword).length < 8) {
         return res.status(400).json({
           success: false,
           message:
@@ -1025,10 +1051,7 @@ app.put(
         });
       }
 
-      if (
-        currentPassword ===
-        newPassword
-      ) {
+      if (currentPassword === newPassword) {
         return res.status(400).json({
           success: false,
           message:
@@ -1036,85 +1059,55 @@ app.put(
         });
       }
 
-      const normalizedEmail =
-        ADMIN_EMAIL
-          .trim()
-          .toLowerCase();
+      const normalizedEmail = ADMIN_EMAIL.trim().toLowerCase();
 
-      const savedCredential =
-        await AdminCredential.findOne(
-          {
-            email:
-              normalizedEmail,
-          }
+      const savedCredential = await AdminCredential.findOne({
+        email: normalizedEmail,
+      });
+
+      let isCurrentPasswordValid = false;
+
+      if (savedCredential) {
+        isCurrentPasswordValid = await bcrypt.compare(
+          currentPassword,
+          savedCredential.passwordHash
         );
-
-      let isCurrentPasswordValid =
-        false;
-
-      if (
-        savedCredential
-      ) {
-        isCurrentPasswordValid =
-          await bcrypt.compare(
-            currentPassword,
-            savedCredential.passwordHash
-          );
       } else {
-        isCurrentPasswordValid =
-          currentPassword ===
-          ADMIN_PASSWORD;
+        isCurrentPasswordValid = currentPassword === ADMIN_PASSWORD;
       }
 
-      if (
-        !isCurrentPasswordValid
-      ) {
+      if (!isCurrentPasswordValid) {
         return res.status(401).json({
           success: false,
-          message:
-            "Current password is incorrect.",
+          message: "Current password is incorrect.",
         });
       }
 
-      const passwordHash =
-        await bcrypt.hash(
-          newPassword,
-          12
-        );
+      const passwordHash = await bcrypt.hash(newPassword, 12);
 
       await AdminCredential.findOneAndUpdate(
         {
-          email:
-            normalizedEmail,
+          email: normalizedEmail,
         },
-
         {
           $set: {
-            email:
-              normalizedEmail,
-
+            email: normalizedEmail,
             passwordHash,
           },
         },
-
         {
           upsert: true,
           new: true,
-          runValidators:
-            true,
+          runValidators: true,
         }
       );
 
       return res.json({
         success: true,
-        message:
-          "Password changed successfully.",
+        message: "Password changed successfully.",
       });
     } catch (error) {
-      console.error(
-        "Change password error:",
-        error
-      );
+      console.error("Change password error:", error);
 
       return res.status(500).json({
         success: false,
@@ -1125,6 +1118,436 @@ app.put(
   }
 );
 
+
+/* =========================================================
+   FORGOT ADMIN PASSWORD - SEND / RESEND OTP
+========================================================= */
+
+app.post("/api/auth/forgot-password", async (req, res) => {
+  try {
+    const email = String(req.body?.email || "")
+      .trim()
+      .toLowerCase();
+
+    const adminEmail = String(ADMIN_EMAIL || "")
+      .trim()
+      .toLowerCase();
+
+    const genericMessage =
+      "If the email matches the admin account, an OTP will be sent.";
+
+    if (!email || email !== adminEmail) {
+      return res.json({
+        success: true,
+        message: genericMessage,
+      });
+    }
+
+    if (!emailTransporter) {
+      return res.status(503).json({
+        success: false,
+        message: "Email is not configured on the server.",
+      });
+    }
+
+    let credential = await AdminCredential.findOne({
+      email: adminEmail,
+    });
+
+    if (!credential) {
+      credential = await AdminCredential.create({
+        email: adminEmail,
+        passwordHash: await bcrypt.hash(ADMIN_PASSWORD, 12),
+      });
+    }
+
+    const otp = crypto.randomInt(100000, 1000000).toString();
+
+    credential.resetOtpHash = await bcrypt.hash(otp, 10);
+    credential.resetOtpExpires = new Date(
+      Date.now() + 1 * 60 * 1000
+    );
+    credential.resetOtpVerifiedAt = undefined;
+
+    await credential.save();
+
+    try {
+      await emailTransporter.sendMail({
+        from: `"ReviewQR" <${EMAIL_USER}>`,
+        to: adminEmail,
+        subject: "Your ReviewQR password reset OTP",
+        text: `Your ReviewQR password reset OTP is ${otp}. It expires in 1 minute. If you did not request this, ignore this email.`,
+        html: `
+          <div style="font-family:Arial,sans-serif;line-height:1.6">
+            <h2>ReviewQR Password Reset</h2>
+            <p>Your one-time password (OTP) is:</p>
+            <div style="font-size:30px;font-weight:bold;letter-spacing:8px">
+              ${otp}
+            </div>
+            <p>This OTP expires in 1 minute.</p>
+            <p>If you did not request this, ignore this email.</p>
+          </div>
+        `,
+      });
+    } catch (mailError) {
+      await AdminCredential.updateOne(
+        { email: adminEmail },
+        {
+          $unset: {
+            resetOtpHash: 1,
+            resetOtpExpires: 1,
+            resetOtpVerifiedAt: 1,
+          },
+        }
+      );
+
+      throw mailError;
+    }
+
+    return res.json({
+      success: true,
+      message: genericMessage,
+    });
+  } catch (error) {
+    console.error("Forgot password OTP error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to send the OTP. Please try again.",
+    });
+  }
+});
+
+
+/* =========================================================
+   VERIFY OTP - MUST SUCCEED BEFORE SHOWING PASSWORD FIELDS
+========================================================= */
+
+app.post("/api/auth/verify-reset-otp", async (req, res) => {
+  try {
+    const email = String(req.body?.email || "")
+      .trim()
+      .toLowerCase();
+
+    const otp = String(req.body?.otp || "").trim();
+
+    const adminEmail = String(ADMIN_EMAIL || "")
+      .trim()
+      .toLowerCase();
+
+    if (
+      email !== adminEmail ||
+      !/^\d{6}$/.test(otp)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired OTP. Request a new OTP.",
+      });
+    }
+
+    const credential = await AdminCredential.findOne({
+      email: adminEmail,
+    });
+
+    if (
+      !credential ||
+      !credential.resetOtpHash ||
+      !credential.resetOtpExpires ||
+      credential.resetOtpExpires <= new Date()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired. Please resend OTP.",
+      });
+    }
+
+    const matches = await bcrypt.compare(
+      otp,
+      credential.resetOtpHash
+    );
+
+    if (!matches) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect OTP.",
+      });
+    }
+
+    credential.resetOtpVerifiedAt = new Date();
+    await credential.save();
+
+    return res.json({
+      success: true,
+      message: "OTP verified successfully.",
+    });
+  } catch (error) {
+    console.error("OTP verification error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to verify OTP. Please try again.",
+    });
+  }
+});
+
+
+/* =========================================================
+   RESET PASSWORD - ONLY AFTER OTP VERIFICATION
+========================================================= */
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const email = String(req.body?.email || "")
+      .trim()
+      .toLowerCase();
+
+    const newPassword = req.body?.newPassword;
+
+    const adminEmail = String(ADMIN_EMAIL || "")
+      .trim()
+      .toLowerCase();
+
+    if (
+      email !== adminEmail ||
+      typeof newPassword !== "string" ||
+      newPassword.length < 8
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid email and password of at least 8 characters are required.",
+      });
+    }
+
+    const credential = await AdminCredential.findOne({
+      email: adminEmail,
+    });
+
+    const now = new Date();
+
+    if (
+      !credential ||
+      !credential.resetOtpHash ||
+      !credential.resetOtpExpires ||
+      credential.resetOtpExpires <= now ||
+      !credential.resetOtpVerifiedAt ||
+      credential.resetOtpVerifiedAt > now
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP is invalid or expired. Please request a new OTP.",
+      });
+    }
+
+    credential.passwordHash = await bcrypt.hash(newPassword, 12);
+
+    // Invalidate the OTP after a successful password reset.
+    credential.resetOtpHash = undefined;
+    credential.resetOtpExpires = undefined;
+    credential.resetOtpVerifiedAt = undefined;
+
+    await credential.save();
+
+    return res.json({
+      success: true,
+      message: "Password reset successfully. You can now sign in.",
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to reset the password. Please try again.",
+    });
+  }
+});
+
+
+
+// --------------------------------------------------
+// RESET ADMIN PASSWORD - VERIFY OTP
+// --------------------------------------------------
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const email = String(req.body?.email || "")
+      .trim()
+      .toLowerCase();
+
+    const otp = String(req.body?.otp || "").trim();
+    const newPassword = req.body?.newPassword;
+
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, OTP, and new password are required.",
+      });
+    }
+
+    if (!/^\d{6}$/.test(otp)) {
+      return res.status(400).json({
+        success: false,
+        message: "Enter a valid 6-digit OTP.",
+      });
+    }
+
+    if (
+      typeof newPassword !== "string" ||
+      newPassword.length < 8
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters long.",
+      });
+    }
+
+    const adminEmail = String(ADMIN_EMAIL || "")
+      .trim()
+      .toLowerCase();
+
+    if (email !== adminEmail) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired OTP. Request a new OTP.",
+      });
+    }
+
+    const credential = await AdminCredential.findOne({
+      email: adminEmail,
+    });
+
+    if (
+      !credential ||
+      !credential.resetOtpHash ||
+      !credential.resetOtpExpires ||
+      credential.resetOtpExpires <= new Date()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP is invalid or expired. Request a new OTP.",
+      });
+    }
+
+    const otpMatches = await bcrypt.compare(
+      otp,
+      credential.resetOtpHash
+    );
+
+    if (!otpMatches) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect OTP.",
+      });
+    }
+
+    credential.passwordHash = await bcrypt.hash(
+      newPassword,
+      12
+    );
+
+    // OTP can only be used once.
+    credential.resetOtpHash = undefined;
+    credential.resetOtpExpires = undefined;
+
+    await credential.save();
+
+    return res.json({
+      success: true,
+      message: "Password reset successfully. You can now sign in.",
+    });
+  } catch (error) {
+    console.error("Reset password OTP error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to reset the password. Please try again.",
+    });
+  }
+});
+
+// --------------------------------------------------
+// RESET ADMIN PASSWORD
+// --------------------------------------------------
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const { token, newPassword } = req.body || {};
+
+    if (
+      typeof token !== "string" ||
+      !token ||
+      typeof newPassword !== "string" ||
+      !newPassword
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Reset token and new password are required.",
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "New password must be at least 8 characters long.",
+      });
+    }
+
+    const resetTokenHash = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const normalizedEmail = String(ADMIN_EMAIL)
+      .trim()
+      .toLowerCase();
+
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+
+    // Atomically validate and consume the token.
+    const updatedCredential =
+      await AdminCredential.findOneAndUpdate(
+        {
+          email: normalizedEmail,
+          resetTokenHash,
+          resetTokenExpires: { $gt: new Date() },
+        },
+        {
+          $set: {
+            passwordHash,
+          },
+          $unset: {
+            resetTokenHash: 1,
+            resetTokenExpires: 1,
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+    if (!updatedCredential) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This password reset link is invalid or has expired. Please request a new one.",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message:
+        "Password reset successfully. You can now log in with your new password.",
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to reset the password. Please try again.",
+    });
+  }
+});
+
 // --------------------------------------------------
 // GET ALL BUSINESSES - ADMIN ONLY
 // --------------------------------------------------
@@ -1134,28 +1557,21 @@ app.get(
   requireAuth,
   async (req, res) => {
     try {
-      const businesses =
-        await Business.find().sort({
-          createdAt: -1,
-        });
+      const businesses = await Business.find().sort({
+        createdAt: -1,
+      });
 
       res.json({
         success: true,
-        data:
-          businesses,
-        count:
-          businesses.length,
+        data: businesses,
+        count: businesses.length,
       });
     } catch (error) {
-      console.error(
-        "Get businesses error:",
-        error
-      );
+      console.error("Get businesses error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to retrieve businesses.",
+        message: "Failed to retrieve businesses.",
       });
     }
   }
@@ -1170,35 +1586,27 @@ app.get(
   requireAuth,
   async (req, res) => {
     try {
-      const business =
-        await Business.findOne({
-          id:
-            req.params.id,
-        });
+      const business = await Business.findOne({
+        id: req.params.id,
+      });
 
       if (!business) {
         return res.status(404).json({
           success: false,
-          message:
-            "Business not found",
+          message: "Business not found",
         });
       }
 
       res.json({
         success: true,
-        data:
-          business,
+        data: business,
       });
     } catch (error) {
-      console.error(
-        "Get business error:",
-        error
-      );
+      console.error("Get business error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to retrieve business.",
+        message: "Failed to retrieve business.",
       });
     }
   }
@@ -1212,35 +1620,27 @@ app.get(
   "/api/public/businesses/:id",
   async (req, res) => {
     try {
-      const business =
-        await Business.findOne({
-          id:
-            req.params.id,
-        });
+      const business = await Business.findOne({
+        id: req.params.id,
+      });
 
       if (!business) {
         return res.status(404).json({
           success: false,
-          message:
-            "Business not found",
+          message: "Business not found",
         });
       }
 
       res.json({
         success: true,
-        data:
-          business,
+        data: business,
       });
     } catch (error) {
-      console.error(
-        "Public business error:",
-        error
-      );
+      console.error("Public business error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to retrieve business.",
+        message: "Failed to retrieve business.",
       });
     }
   }
@@ -1269,142 +1669,66 @@ app.post(
         reviewsGenerated,
       } = req.body;
 
-      if (
-        !name ||
-        !category
-      ) {
+      if (!name || !category) {
         return res.status(400).json({
           success: false,
-          message:
-            "Business name and category are required",
+          message: "Business name and category are required",
         });
       }
 
-      const existing =
-        await Business.find(
-          {
-            id:
-              /^BUS_\d+$/,
-          },
+      const existing = await Business.find(
+        {
+          id: /^BUS_\d+$/,
+        },
+        {
+          id: 1,
+          _id: 0,
+        }
+      );
 
-          {
-            id: 1,
-            _id: 0,
-          }
-        );
+      const highestNumber = existing.reduce(
+        (max, item) => {
+          const match = item.id.match(/^BUS_(\d+)$/);
 
-      const highestNumber =
-        existing.reduce(
-          (
-            max,
-            item
-          ) => {
-            const match =
-              item.id.match(
-                /^BUS_(\d+)$/
-              );
-
-            return match
-              ? Math.max(
-                  max,
-                  Number(
-                    match[1]
-                  )
-                )
-              : max;
-          },
-
-          0
-        );
+          return match
+            ? Math.max(max, Number(match[1]))
+            : max;
+        },
+        0
+      );
 
       const businessId =
-        `BUS_${String(
-          highestNumber + 1
-        ).padStart(
-          6,
-          "0"
-        )}`;
+        `BUS_${String(highestNumber + 1).padStart(6, "0")}`;
 
-      const newBusiness =
-        await Business.create(
-          {
-            id:
-              businessId,
-
-            name:
-              String(
-                name
-              ).trim(),
-
-            category,
-
-            businessType:
-              businessType ||
-              "",
-
-            specialization:
-              specialization ||
-              "",
-
-            address:
-              address ||
-              "",
-
-            phone:
-              phone ||
-              "",
-
-            googleReviewUrl:
-              googleReviewUrl ||
-              "",
-
-            selectedQuestions:
-              Array.isArray(
-                selectedQuestions
-              )
-                ? selectedQuestions
-                : [],
-
-            status:
-              status ||
-              "Active",
-
-            qrStatus:
-              qrStatus ||
-              "Pending",
-
-            reviewsGenerated:
-              Number(
-                reviewsGenerated ||
-                  0
-              ),
-
-            createdAt:
-              new Date()
-                .toISOString()
-                .split("T")[0],
-          }
-        );
+      const newBusiness = await Business.create({
+        id: businessId,
+        name: String(name).trim(),
+        category,
+        businessType: businessType || "",
+        specialization: specialization || "",
+        address: address || "",
+        phone: phone || "",
+        googleReviewUrl: googleReviewUrl || "",
+        selectedQuestions: Array.isArray(selectedQuestions)
+          ? selectedQuestions
+          : [],
+        status: status || "Active",
+        qrStatus: qrStatus || "Pending",
+        reviewsGenerated: Number(reviewsGenerated || 0),
+        createdAt: new Date().toISOString().split("T")[0],
+      });
 
       res.status(201).json({
         success: true,
-
-        message:
-          "Business created successfully",
-
-        data:
-          newBusiness,
+        message: "Business created successfully",
+        data: newBusiness,
       });
     } catch (error) {
-      console.error(
-        "Create business error:",
-        error
-      );
+      console.error("Create business error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to create business.",
+        message: "Failed to create business.",
       });
     }
   }
@@ -1427,52 +1751,37 @@ app.put(
       delete updates._id;
       delete updates.__v;
 
-      const business =
-        await Business.findOneAndUpdate(
-          {
-            id:
-              req.params.id,
-          },
-
-          {
-            $set:
-              updates,
-          },
-
-          {
-            new: true,
-            runValidators:
-              true,
-          }
-        );
+      const business = await Business.findOneAndUpdate(
+        {
+          id: req.params.id,
+        },
+        {
+          $set: updates,
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
 
       if (!business) {
         return res.status(404).json({
           success: false,
-          message:
-            "Business not found",
+          message: "Business not found",
         });
       }
 
       res.json({
         success: true,
-
-        message:
-          "Business updated successfully",
-
-        data:
-          business,
+        message: "Business updated successfully",
+        data: business,
       });
     } catch (error) {
-      console.error(
-        "Update business error:",
-        error
-      );
+      console.error("Update business error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to update business.",
+        message: "Failed to update business.",
       });
     }
   }
@@ -1487,48 +1796,32 @@ app.delete(
   requireAuth,
   async (req, res) => {
     try {
-      const business =
-        await Business.findOneAndDelete(
-          {
-            id:
-              req.params.id,
-          }
-        );
+      const business = await Business.findOneAndDelete({
+        id: req.params.id,
+      });
 
       if (!business) {
         return res.status(404).json({
           success: false,
-          message:
-            "Business not found",
+          message: "Business not found",
         });
       }
 
-      await ReviewActivity.deleteMany(
-        {
-          businessId:
-            req.params.id,
-        }
-      );
+      await ReviewActivity.deleteMany({
+        businessId: req.params.id,
+      });
 
       res.json({
         success: true,
-
-        message:
-          "Business deleted successfully",
-
-        data:
-          business,
+        message: "Business deleted successfully",
+        data: business,
       });
     } catch (error) {
-      console.error(
-        "Delete business error:",
-        error
-      );
+      console.error("Delete business error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to delete business.",
+        message: "Failed to delete business.",
       });
     }
   }
@@ -1552,22 +1845,18 @@ app.post(
       if (!businessId) {
         return res.status(400).json({
           success: false,
-          message:
-            "Business ID is required.",
+          message: "Business ID is required.",
         });
       }
 
-      const business =
-        await Business.findOne({
-          id:
-            businessId,
-        });
+      const business = await Business.findOne({
+        id: businessId,
+      });
 
       if (!business) {
         return res.status(404).json({
           success: false,
-          message:
-            "Business not found",
+          message: "Business not found",
         });
       }
 
@@ -1578,80 +1867,45 @@ app.post(
         "google_opened",
       ];
 
-      if (
-        !allowedEvents.includes(
-          event
-        )
-      ) {
+      if (!allowedEvents.includes(event)) {
         return res.status(400).json({
           success: false,
-          message:
-            "Invalid review activity event",
+          message: "Invalid review activity event",
         });
       }
 
-      const activity =
-        await ReviewActivity.create(
-          {
-            id: `REV_${Date.now()}_${Math.random()
-              .toString(36)
-              .slice(2, 8)}`,
+      const activity = await ReviewActivity.create({
+        id: `REV_${Date.now()}_${Math.random()
+          .toString(36)
+          .slice(2, 8)}`,
+        businessId,
+        event,
+        answers: Array.isArray(answers)
+          ? answers
+          : [],
+        generatedReview: generatedReview || "",
+        createdAt: new Date().toISOString(),
+      });
 
-            businessId,
-
-            event,
-
-            answers:
-              Array.isArray(
-                answers
-              )
-                ? answers
-                : [],
-
-            generatedReview:
-              generatedReview ||
-              "",
-
-            createdAt:
-              new Date().toISOString(),
-          }
-        );
-
-      if (
-        event ===
-        "generated"
-      ) {
+      if (event === "generated") {
         business.reviewsGenerated =
-          Number(
-            business.reviewsGenerated ||
-              0
-          ) + 1;
+          Number(business.reviewsGenerated || 0) + 1;
 
         await business.save();
       }
 
       res.status(201).json({
         success: true,
-
-        message:
-          "Review activity recorded",
-
-        data:
-          activity,
-
-        reviewsGenerated:
-          business.reviewsGenerated,
+        message: "Review activity recorded",
+        data: activity,
+        reviewsGenerated: business.reviewsGenerated,
       });
     } catch (error) {
-      console.error(
-        "Create review activity error:",
-        error
-      );
+      console.error("Create review activity error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to record review activity.",
+        message: "Failed to record review activity.",
       });
     }
   }
@@ -1666,37 +1920,29 @@ app.get(
   requireAuth,
   async (req, res) => {
     try {
-      const filter =
-        req.query.businessId
-          ? {
-              businessId:
-                req.query.businessId,
-            }
-          : {};
+      const filter = req.query.businessId
+        ? {
+            businessId: req.query.businessId,
+          }
+        : {};
 
-      const data =
-        await ReviewActivity.find(
-          filter
-        ).sort({
-          createdAt: -1,
-        });
+      const data = await ReviewActivity.find(
+        filter
+      ).sort({
+        createdAt: -1,
+      });
 
       res.json({
         success: true,
         data,
-        count:
-          data.length,
+        count: data.length,
       });
     } catch (error) {
-      console.error(
-        "Get review activity error:",
-        error
-      );
+      console.error("Get review activity error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to retrieve review activity.",
+        message: "Failed to retrieve review activity.",
       });
     }
   }
@@ -1711,21 +1957,16 @@ app.get(
   requireAuth,
   async (req, res) => {
     try {
-      const counts =
-        await ReviewActivity.aggregate(
-          [
-            {
-              $group: {
-                _id:
-                  "$event",
-
-                count: {
-                  $sum: 1,
-                },
-              },
+      const counts = await ReviewActivity.aggregate([
+        {
+          $group: {
+            _id: "$event",
+            count: {
+              $sum: 1,
             },
-          ]
-        );
+          },
+        },
+      ]);
 
       const data = {
         started: 0,
@@ -1734,56 +1975,34 @@ app.get(
         googleOpened: 0,
       };
 
-      counts.forEach(
-        (item) => {
-          if (
-            item._id ===
-            "started"
-          ) {
-            data.started =
-              item.count;
-          }
-
-          if (
-            item._id ===
-            "generated"
-          ) {
-            data.generated =
-              item.count;
-          }
-
-          if (
-            item._id ===
-            "copied"
-          ) {
-            data.copied =
-              item.count;
-          }
-
-          if (
-            item._id ===
-            "google_opened"
-          ) {
-            data.googleOpened =
-              item.count;
-          }
+      counts.forEach((item) => {
+        if (item._id === "started") {
+          data.started = item.count;
         }
-      );
+
+        if (item._id === "generated") {
+          data.generated = item.count;
+        }
+
+        if (item._id === "copied") {
+          data.copied = item.count;
+        }
+
+        if (item._id === "google_opened") {
+          data.googleOpened = item.count;
+        }
+      });
 
       res.json({
         success: true,
         data,
       });
     } catch (error) {
-      console.error(
-        "Review statistics error:",
-        error
-      );
+      console.error("Review statistics error:", error);
 
       res.status(500).json({
         success: false,
-        message:
-          "Failed to retrieve review statistics.",
+        message: "Failed to retrieve review statistics.",
       });
     }
   }
@@ -1803,9 +2022,7 @@ async function startServer() {
       "MongoDB connected successfully"
     );
 
-    if (
-      OPENAI_API_KEY
-    ) {
+    if (OPENAI_API_KEY) {
       console.log(
         `OpenAI question generation enabled using model: ${OPENAI_MODEL}`
       );

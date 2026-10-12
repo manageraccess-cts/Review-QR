@@ -771,3 +771,118 @@
     }
   
   }
+
+/* =========================================================
+   FORGOT PASSWORD
+   Added without changing existing styles
+========================================================= */
+
+.login-forgot-password {
+  display: flex;
+  justify-content: flex-end;
+  margin: -7px 0 12px;
+}
+
+.login-forgot-password button {
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: #315edb;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.login-forgot-password button:hover:not(:disabled) {
+  color: #214dbd;
+  text-decoration: underline;
+}
+
+.login-forgot-password button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.login-success {
+  min-height: 37px;
+  margin: 2px 0 12px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccebd8;
+  border-radius: 8px;
+  background: rgba(245, 255, 249, 0.97);
+}
+
+.login-success p {
+  margin: 0;
+  color: #247443;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   BACK TO SIGN IN
+========================================================= */
+
+.login-back-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid rgba(164, 178, 207, 0.85);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #315edb;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.login-back-button:hover:not(:disabled) {
+  border-color: #315edb;
+  background: #f5f8ff;
+}
+
+.login-back-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   RESPONSIVE ADDITIONS
+========================================================= */
+
+@media (max-height: 650px) {
+  .login-forgot-password button {
+    font-size: 8px;
+  }
+
+  .login-back-button {
+    padding: 8px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-forgot-password button {
+    font-size: 7px;
+  }
+
+  .login-back-button {
+    padding: 8px;
+    border-radius: 7px;
+    font-size: 8px;
+  }
+}

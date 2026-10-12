@@ -76,6 +76,49 @@ export const loginAdmin = async (email, password) => {
 };
 
 
+
+/* =========================================================
+   FORGOT ADMIN PASSWORD - SEND / RESEND OTP
+========================================================= */
+
+export const forgotAdminPassword = async (email) => {
+  return apiRequest("/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+};
+
+
+/* =========================================================
+   VERIFY RESET OTP
+========================================================= */
+
+export const verifyAdminResetOtp = async (email, otp) => {
+  return apiRequest("/auth/verify-reset-otp", {
+    method: "POST",
+    body: JSON.stringify({ email, otp }),
+  });
+};
+
+
+/* =========================================================
+   RESET ADMIN PASSWORD AFTER OTP VERIFICATION
+========================================================= */
+
+export const resetAdminPassword = async (
+  email,
+  newPassword
+) => {
+  return apiRequest("/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+      newPassword,
+    }),
+  });
+};
+
+
 /* =========================================================
    CURRENT ADMIN
 ========================================================= */
