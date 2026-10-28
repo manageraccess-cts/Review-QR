@@ -2034,6 +2034,7 @@ async function startServer() {
 
     app.listen(
       PORT,
+      process.env.HOST || "127.0.0.1",
       () => {
         console.log(
           `Server running on http://localhost:${PORT}`
