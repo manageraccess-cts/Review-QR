@@ -10,11 +10,11 @@ import "./Review.css";
 const getOptionText = (option) =>
   option && typeof option === "object"
     ? String(
-        option.text ??
-          option.label ??
-          option.value ??
-          ""
-      ).trim()
+      option.text ??
+      option.label ??
+      option.value ??
+      ""
+    ).trim()
     : String(option ?? "").trim();
 
 const getOptionScoreByIndex = (
@@ -48,8 +48,8 @@ const getAnswerTypeByScore = (score) =>
   score >= 4
     ? "positive"
     : score <= 2
-    ? "negative"
-    : "neutral";
+      ? "negative"
+      : "neutral";
 
 const getOptionEmoji = (
   index,
@@ -73,7 +73,7 @@ const getOptionEmoji = (
   if (total === 5) {
     return (
       ["🤩", "😊", "😐", "😕", "😣"][
-        index
+      index
       ] || "😐"
     );
   }
@@ -81,8 +81,8 @@ const getOptionEmoji = (
   return index === 0
     ? "🤩"
     : index === total - 1
-    ? "😞"
-    : "😊";
+      ? "😞"
+      : "😊";
 };
 
 const getQuestionTopic = (question) => {
@@ -848,7 +848,7 @@ const getProfessionalOptionLabels = (
 ) => {
   const sets =
     QUESTION_LABELS[
-      getQuestionCategory(question)
+    getQuestionCategory(question)
     ] ||
     QUESTION_LABELS.service;
 
@@ -857,16 +857,16 @@ const getProfessionalOptionLabels = (
 
   const labels =
     sets[
-      Math.abs(
-        seed
-          .split("")
-          .reduce(
-            (sum, char) =>
-              sum +
-              char.charCodeAt(0),
-            0
-          )
-      ) % sets.length
+    Math.abs(
+      seed
+        .split("")
+        .reduce(
+          (sum, char) =>
+            sum +
+            char.charCodeAt(0),
+          0
+        )
+    ) % sets.length
     ];
 
   if (total === 2) {
@@ -1360,6 +1360,9 @@ const Review = () => {
   const [reviewGenerated, setReviewGenerated] =
     useState(false);
 
+  const [showCopyPopup, setShowCopyPopup] =
+    useState(false);
+
   const [generationNumber, setGenerationNumber] =
     useState(0);
 
@@ -1416,7 +1419,7 @@ const Review = () => {
 
           setError(
             err.message ||
-              "Unable to load this review page."
+            "Unable to load this review page."
           );
         } finally {
           setLoading(false);
@@ -1446,7 +1449,7 @@ const Review = () => {
             if (
               selectedQuestion &&
               typeof selectedQuestion ===
-                "object" &&
+              "object" &&
               selectedQuestion.question
             ) {
               const options =
@@ -1454,45 +1457,43 @@ const Review = () => {
                   selectedQuestion.options
                 )
                   ? selectedQuestion.options
-                      .map(
-                        (
-                          option,
-                          optionIndex
-                        ) => {
-                          const text =
-                            getOptionText(
-                              option
-                            );
+                    .map(
+                      (
+                        option,
+                        optionIndex
+                      ) => {
+                        const text =
+                          getOptionText(
+                            option
+                          );
 
-                          if (!text) {
-                            return null;
-                          }
-
-                          return {
-                            ...(option &&
-                            typeof option ===
-                              "object"
-                              ? option
-                              : {}),
-                            id:
-                              option?.id ||
-                              `${
-                                selectedQuestion.id ||
-                                index
-                              }-${optionIndex}`,
-                            text,
-                          };
+                        if (!text) {
+                          return null;
                         }
-                      )
-                      .filter(Boolean)
+
+                        return {
+                          ...(option &&
+                            typeof option ===
+                            "object"
+                            ? option
+                            : {}),
+                          id:
+                            option?.id ||
+                            `${selectedQuestion.id ||
+                            index
+                            }-${optionIndex}`,
+                          text,
+                        };
+                      }
+                    )
+                    .filter(Boolean)
                   : [];
 
               return {
                 ...selectedQuestion,
                 id:
                   selectedQuestion.id ||
-                  `saved-question-${
-                    index + 1
+                  `saved-question-${index + 1
                   }`,
                 question:
                   String(
@@ -1557,7 +1558,7 @@ const Review = () => {
           event,
           extraData.answers || [],
           extraData.generatedReview ||
-            ""
+          ""
         );
       } catch (err) {
         console.error(
@@ -1572,7 +1573,7 @@ const Review = () => {
   ) => {
     const question =
       reviewQuestions[
-        currentQuestion
+      currentQuestion
       ];
 
     if (!question) {
@@ -1581,7 +1582,7 @@ const Review = () => {
 
     const option =
       question.options[
-        optionIndex
+      optionIndex
       ];
 
     const score =
@@ -1645,7 +1646,7 @@ const Review = () => {
         reviewQuestions.filter(
           (question) =>
             answers[
-              question.id
+            question.id
             ]
         );
 
@@ -1674,7 +1675,7 @@ const Review = () => {
         Math.round(
           (total /
             answeredQuestions.length) *
-            10
+          10
         ) / 10
       );
     }, [
@@ -1850,7 +1851,7 @@ const Review = () => {
           .map((question) => {
             const answer =
               answerState[
-                question.id
+              question.id
               ];
 
             if (!answer) {
@@ -1900,7 +1901,7 @@ const Review = () => {
       const businessName =
         String(
           business.name ||
-            "the business"
+          "the business"
         ).trim();
 
       let randomState =
@@ -1909,7 +1910,7 @@ const Review = () => {
           generationNumber * 7919 +
           Math.floor(
             Math.random() *
-              2147483647
+            2147483647
           )
         ) >>> 0;
 
@@ -1917,7 +1918,7 @@ const Review = () => {
         randomState =
           (
             randomState *
-              1664525 +
+            1664525 +
             1013904223
           ) >>> 0;
 
@@ -1943,16 +1944,16 @@ const Review = () => {
           const j =
             Math.floor(
               nextRandom() *
-                (i + 1)
+              (i + 1)
             );
 
           [
             copy[i],
             copy[j],
           ] = [
-            copy[j],
-            copy[i],
-          ];
+              copy[j],
+              copy[i],
+            ];
         }
 
         return copy;
@@ -1977,7 +1978,7 @@ const Review = () => {
           const match =
             String(
               question?.question ||
-                ""
+              ""
             ).match(
               /\b(dermatologist|doctor|physician|specialist|dentist|therapist|surgeon|nurse|practitioner|clinician|consultant)\b/i
             );
@@ -1988,131 +1989,135 @@ const Review = () => {
         };
 
       /*
-       * IMPORTANT:
-       * Every base sentence has many natural variations.
-       * We NEVER fall back to an already-used sentence.
+       * Build natural, complete thoughts. Do not attach generic
+       * sentence fragments to a complete sentence: that creates
+       * repetitive and grammatically disconnected reviews.
        */
-
-      const variants = {
-        positive: [
-          ". A detail I genuinely appreciated.",
-          ". One of the better parts of the visit for me.",
-          ". Something that made the visit easier.",
-          ". A small touch that stood out in a good way.",
-          ". Something I was particularly happy with.",
-          ". A detail that added to the visit.",
-          ". One part that left a good impression on me.",
-          ". Something that made a noticeable difference.",
-          ". A nice part of the visit.",
-          ". One of the things I liked most.",
-          ". A detail that made things feel more comfortable.",
-          ". Something that worked especially well for me.",
-          ". One part I would happily mention to someone else.",
-          ". A small thing that made the experience better.",
-          ". Something I found reassuring.",
-          ". One aspect that felt well handled.",
-        ],
-
-        neutral: [
-          ". Something that worked reasonably well for my visit.",
-          ". A part that was fine for what I needed.",
-          ". Nothing major, although there is still room to improve.",
-          ". A fairly routine part of the visit.",
-          ". Something that met my basic expectations.",
-          ". A detail that was acceptable without standing out.",
-          ". One area where a little more attention could help.",
-          ". Something that was manageable for this visit.",
-          ". A part that could be made a little smoother.",
-          ". Something I found adequate overall.",
-          ". An aspect that was fine, though not especially memorable.",
-          ". A detail that could benefit from some refinement.",
-          ". Something that worked without causing a major issue.",
-          ". A fairly ordinary part of the visit.",
-          ". One detail that could be strengthened.",
-          ". Something I would describe as satisfactory.",
-        ],
-
-        negative: [
-          ". A detail I would have liked to see handled better.",
-          ". One area that could use more attention.",
-          ". Something that took away from the visit.",
-          ". A part that left me wanting more.",
-          ". A detail that was noticeable for the wrong reasons.",
-          ". One aspect I would improve.",
-          ". Something that could have been handled more smoothly.",
-          ". A point that affected my impression of the visit.",
-          ". One area where a better approach would help.",
-          ". A detail that did not work as well as expected.",
-          ". Something I hope receives more attention in future.",
-          ". One part that could have been more polished.",
-          ". A detail that made the visit less comfortable.",
-          ". Something that could have been more consistent.",
-          ". One point that I found disappointing.",
-          ". An aspect that needs more attention.",
-        ],
+      const topicPhrases = {
+        booking: {
+          positive: ["booking was quick and straightforward", "arranging the visit was easy"],
+          neutral: ["booking was fairly straightforward", "arranging the visit was manageable"],
+          negative: ["booking took more effort than it should have", "arranging the visit was frustrating"]
+        },
+        reception: {
+          positive: ["the reception team gave me a warm welcome", "the staff at the front desk were friendly and helpful", "I was greeted in a friendly way when I arrived", "the welcome made a good first impression", "the check-in experience felt welcoming", "the people at reception made the arrival easy"],
+          neutral: ["the welcome at reception was polite but fairly routine", "the front desk handled things adequately"],
+          negative: ["the welcome at reception felt impersonal", "the front desk staff could have been more welcoming"]
+        },
+        doctor_attention: {
+          positive: ["the {role} listened carefully and took my concerns seriously", "the {role} took the time to understand what I needed", "I appreciated that the {role} gave my concerns proper attention", "the consultation felt attentive rather than rushed", "the {role} made an effort to understand my situation", "I felt heard during my discussion with the {role}"],
+          neutral: ["the {role} addressed my main concerns, although the discussion felt brief", "the {role} covered the basics but could have discussed things in more detail"],
+          negative: ["the {role} seemed rushed and did not spend enough time listening", "I did not feel that the {role} fully addressed my concerns"]
+        },
+        doctor: {
+          positive: ["the {role} was professional and reassuring", "the consultation was handled with care and confidence"],
+          neutral: ["the consultation was satisfactory, though fairly routine", "the care was reasonable but could have been more thorough"],
+          negative: ["the consultation felt rushed and lacked detail", "the care fell short of what I had expected"]
+        },
+        staff: {
+          positive: ["the staff were friendly and helpful", "everyone I spoke with was polite and approachable"],
+          neutral: ["the staff were polite, although the service felt routine", "the team handled my requests adequately"],
+          negative: ["the staff could have been more attentive", "some interactions felt less helpful than they should have"]
+        },
+        service: {
+          positive: ["the service was smooth and attentive", "everything was handled efficiently and professionally"],
+          neutral: ["the service was acceptable, though nothing particularly stood out", "things went reasonably well, with some room for improvement"],
+          negative: ["the service felt inconsistent", "the overall service fell short of my expectations"]
+        },
+        cleanliness: {
+          positive: ["the place was clean and well maintained", "the surroundings looked neat and hygienic", "the overall upkeep was reassuring", "I noticed that the shared areas were kept tidy", "cleanliness seemed to be taken seriously", "the space looked cared for rather than neglected"],
+          neutral: ["the place was reasonably clean, although a few areas could be better maintained", "the cleanliness was acceptable overall"],
+          negative: ["the place could have been cleaner", "some areas needed more attention to hygiene and upkeep"]
+        },
+        ambience: {
+          positive: ["the atmosphere was relaxed and welcoming", "the setting made the visit more enjoyable"],
+          neutral: ["the atmosphere was pleasant enough but not especially memorable", "the setting was fine, although it could feel more inviting"],
+          negative: ["the atmosphere felt less welcoming than I expected", "the surroundings could have been more inviting"]
+        },
+        comfort: {
+          positive: ["the place was comfortable and easy to relax in", "I felt at ease throughout the visit", "the setting made it easy to settle in", "I found the environment pleasant to spend time in", "the overall setup felt relaxed and practical", "I was able to feel comfortable during my time there"],
+          neutral: ["the comfort level was adequate for the visit", "the setting was comfortable enough, though it could be improved"],
+          negative: ["the setting was less comfortable than I expected", "it was difficult to feel fully comfortable during the visit"]
+        },
+        safety: {
+          positive: ["I felt safe throughout my visit", "the arrangements gave me confidence in my safety", "I was comfortable with the security arrangements", "safety did not feel like a concern during my time there", "the environment gave me peace of mind", "I had no worries about my personal safety"],
+          neutral: ["the safety arrangements seemed adequate", "I felt reasonably comfortable with the arrangements"],
+          negative: ["the arrangements did not give me much confidence", "I had concerns about the sense of security"]
+        },
+        value: {
+          positive: ["the prices felt fair for the quality", "the experience offered good value for the money", "what I received felt worth the amount paid", "the cost seemed reasonable for the overall standard", "I thought the pricing was fair", "the experience matched what I would expect at that price"],
+          neutral: ["the pricing seemed reasonable, although I expected a little more for the cost", "the value was acceptable but not particularly impressive"],
+          negative: ["the prices felt high for what I received", "the experience did not offer enough value for the cost"]
+        },
+        speed: {
+          positive: ["everything moved quickly without feeling rushed", "there was very little waiting and the process ran smoothly"],
+          neutral: ["the waiting time was manageable, although things could have moved faster", "the timing was acceptable but not especially quick"],
+          negative: ["the wait was longer than expected", "the process moved slowly and could have been better organised"]
+        },
+        communication: {
+          positive: ["everything was explained clearly", "communication was clear and I knew what to expect"],
+          neutral: ["the main points were clear, although a few details could have been explained better", "communication was adequate but could have been clearer"],
+          negative: ["some explanations were unclear", "I was left with questions that could have been answered more clearly"]
+        },
+        food: {
+          positive: ["the food was tasty and well prepared", "I enjoyed the flavour and freshness of the food", "the meals were enjoyable and had a nice flavour", "I was pleased with how the food was prepared", "the food added a nice touch to the stay", "the meals were satisfying without being overcomplicated"],
+          neutral: ["the food was decent but did not particularly stand out", "the meal was fine, although the flavour could have been better"],
+          negative: ["the food did not meet my expectations", "the meal could have been fresher and more flavourful"]
+        },
+        room: {
+          positive: ["the room was clean, comfortable and well maintained", "the accommodation was pleasant and looked after", "the room felt ready for a comfortable stay", "the living space was tidy and thoughtfully kept", "the accommodation met my needs well", "the room was in good condition when I arrived"],
+          neutral: ["the room was adequate, although a few details could be improved", "the accommodation covered the basics"],
+          negative: ["the room needed better upkeep", "the accommodation was less comfortable than I expected"]
+        },
+        location: {
+          positive: ["the location was convenient and easy to reach", "getting there was simple"],
+          neutral: ["the location was reasonably convenient", "getting there was manageable, though not especially easy"],
+          negative: ["the location was less convenient than I expected", "getting there was more difficult than it needed to be"]
+        },
+        facilities: {
+          positive: ["the facilities were well maintained and had what I needed", "the available amenities made the visit more convenient", "the amenities covered the things I needed during my stay", "having those facilities on hand was genuinely useful", "the available features made day-to-day things easier", "the facilities were practical and added to the overall experience"],
+          neutral: ["the facilities covered the basics", "the amenities were adequate, although a few additions would help"],
+          negative: ["the facilities were limited", "some amenities needed improvement"]
+        },
+        quality: {
+          positive: ["the quality was impressive", "the standard of work was consistently good"],
+          neutral: ["the quality was acceptable but not outstanding", "the standard was reasonable, with some room to improve"],
+          negative: ["the quality fell short of my expectations", "the standard was not as good as I had hoped"]
+        },
+        delivery: {
+          positive: ["the order arrived on time and in good condition", "the delivery was prompt and handled carefully"],
+          neutral: ["the order arrived without major issues", "the delivery was acceptable, though the process could be smoother"],
+          negative: ["the delivery took longer than expected", "the order could have been handled more carefully"]
+        },
+        billing: {
+          positive: ["the bill was clear and payment was straightforward", "checkout was quick and there were no confusing charges"],
+          neutral: ["the payment process was manageable", "the billing was fine, although a little more clarity would help"],
+          negative: ["the billing process was confusing", "the charges could have been explained more clearly"]
+        },
+        parking: {
+          positive: ["parking was easy to find", "the parking arrangements were convenient"],
+          neutral: ["parking was manageable, although it was not especially convenient", "the parking arrangements were adequate"],
+          negative: ["finding parking was difficult", "the parking arrangements added unnecessary inconvenience"]
+        },
+        recommendation: {
+          positive: ["I would happily recommend the place to others", "I would feel comfortable suggesting it to friends"],
+          neutral: ["I might recommend it, depending on what someone is looking for", "a few improvements would make it easier to recommend"],
+          negative: ["I would hesitate to recommend it in its current state", "I would want to see some improvements before recommending it"]
+        },
+        overall: {
+          positive: ["the experience was enjoyable overall", "I left with a good impression", "several parts of the visit worked particularly well", "overall, the experience met my expectations", "I found the experience worthwhile", "the visit had enough positives to stand out"],
+          neutral: ["the experience was fine overall, though not especially memorable", "there were good points as well as areas to improve"],
+          negative: ["the experience fell short of my expectations", "I left feeling disappointed with some aspects of the visit"]
+        }
       };
 
-      const getCandidates =
-        (item) => {
-          const topic =
-            item.topic ||
-            "overall";
-
-          const type =
-            item.type ||
-            "neutral";
-
-          let bases =
-            LIBRARY[
-              topic
-            ]?.[type] ||
-            LIBRARY.overall[
-              type
-            ] ||
-            [];
-
-          if (
-            topic === "doctor" ||
-            topic ===
-              "doctor_attention"
-          ) {
-            const role =
-              roleFromQuestion(
-                item.question
-              );
-
-            bases =
-              bases.map(
-                (sentence) =>
-                  sentence.replace(
-                    /\bthe doctor\b/gi,
-                    `the ${role}`
-                  )
-              );
-          }
-
-          return bases.flatMap(
-            (base) => {
-              const cleanBase =
-                clean(base);
-
-              return [
-                cleanBase,
-                ...(
-                  variants[
-                    type
-                  ] || []
-                ).map(
-                  (ending) =>
-                    `${cleanBase.replace(
-                      /[.!?]+$/,
-                      ""
-                    )}${ending}`
-                ),
-              ];
-            }
-          );
-        };
+      const getCandidates = (item) => {
+        const topic = item.topic || "overall";
+        const type = item.type || "neutral";
+        const phrases = topicPhrases[topic]?.[type] || topicPhrases.overall[type];
+        const role = roleFromQuestion(item.question);
+        return phrases.map((phrase) => clean(phrase.replace(/\{role\}/g, role)));
+      };
 
       const openingPools = {
         positive: [
@@ -2122,6 +2127,15 @@ const Review = () => {
           `The time I spent at ${businessName} turned out to be quite enjoyable.`,
           `There was a lot to like about my visit to ${businessName}.`,
           `I had a really good visit to ${businessName}.`,
+          `My experience at ${businessName} was a positive one.`,
+          `I was happy with how my visit to ${businessName} turned out.`,
+          `Spending time at ${businessName} was a good experience.`,
+          `I came away from ${businessName} feeling satisfied.`,
+          `Overall, I enjoyed my time at ${businessName}.`,
+          `A few things made my visit to ${businessName} stand out in a good way.`,
+          `I found my experience at ${businessName} better than expected.`,
+          `My time at ${businessName} went well from the start.`,
+          `I had a worthwhile experience at ${businessName}.`,
         ],
 
         neutral: [
@@ -2143,12 +2157,12 @@ const Review = () => {
 
       const tone =
         positive.length >
-        negative.length
+          negative.length
           ? "positive"
           : negative.length >
             positive.length
-          ? "negative"
-          : "neutral";
+            ? "negative"
+            : "neutral";
 
       const used =
         new Set();
@@ -2190,7 +2204,7 @@ const Review = () => {
 
           return history;
         };
-        const openingKey =
+      const openingKey =
         (sentence) =>
           clean(sentence)
             .toLowerCase()
@@ -2247,18 +2261,37 @@ const Review = () => {
           }
         }
 
-        if (
-          !available.length
-        ) {
+        // Prefer sentences that have never been used, but do not
+        // let a finite phrase library make the review blank.
+        // First relax the global history restriction, while still
+        // avoiding duplicates inside this review. If necessary,
+        // allow a locally-used option as the final fallback.
+        if (!available.length) {
+          available = shuffle(
+            candidates
+              .map(clean)
+              .filter(Boolean)
+          ).filter((sentence) =>
+            !used.has(getSentenceKey(sentence))
+          );
+        }
+
+        if (!available.length) {
+          available = shuffle(
+            candidates.map(clean).filter(Boolean)
+          );
+        }
+
+        if (!available.length) {
           return "";
         }
 
         const selected =
           available[
-            Math.floor(
-              nextRandom() *
-                available.length
-            )
+          Math.floor(
+            nextRandom() *
+            available.length
+          )
           ];
 
         const key =
@@ -2279,118 +2312,162 @@ const Review = () => {
         return selected;
       };
 
+      const chosenPhrases = [];
+      const opening = chooseUnused(openingPools[tone], true);
+
+      /*
+       * Use a small number of details and combine them into
+       * flowing sentences. Mentioning every answer separately
+       * makes a review read like a checklist.
+       */
+      const shuffledAnswers = shuffle(selected);
+
+      /*
+       * Avoid describing the same idea twice under different topics.
+       * For example, "room was comfortable" and "easy to relax"
+       * overlap, as do ambience/comfort and staff/reception.
+       * Keep one detail from each semantic family so the review
+       * covers more distinct parts of the visit.
+       */
+      const topicFamily = {
+        room: "space",
+        comfort: "space",
+        ambience: "space",
+        cleanliness: "space",
+        reception: "people",
+        staff: "people",
+        doctor: "care",
+        doctor_attention: "care",
+        service: "service",
+        speed: "service",
+        booking: "process",
+        billing: "process",
+        value: "cost",
+        food: "food",
+        safety: "safety",
+        location: "location",
+        facilities: "facilities",
+        quality: "quality",
+        delivery: "delivery",
+        parking: "parking",
+        communication: "communication",
+        recommendation: "recommendation",
+        overall: "overall",
+      };
+
+      const selectedFamilies = new Set();
+      const distinctAnswers = [];
+
+      for (const item of shuffledAnswers) {
+        const family = topicFamily[item.topic] || item.topic;
+        if (selectedFamilies.has(family)) continue;
+        selectedFamilies.add(family);
+        distinctAnswers.push(item);
+      }
+
+      const detailLimit = Math.min(4, distinctAnswers.length);
+
+      for (let i = 0; i < detailLimit; i++) {
+        const item = distinctAnswers[i];
+        const phrase = chooseUnused(getCandidates(item));
+        if (phrase) {
+          chosenPhrases.push({ phrase, topic: item.topic, type: item.type });
+        }
+      }
+
       const sentences = [];
+      if (opening) sentences.push(opening);
 
-      const opening =
-        chooseUnused(
-          openingPools[tone],
-          true
-        );
+      const phraseToSentence = (phrase) =>
+        phrase.charAt(0).toUpperCase() + phrase.slice(1).replace(/[.!?]+$/, "") + ".";
 
-      if (opening) {
-        sentences.push(
-          opening
-        );
-      }
+      // Pair details where possible, using natural conjunctions.
+      for (let i = 0; i < chosenPhrases.length; i += 2) {
+        const first = chosenPhrases[i];
+        const second = chosenPhrases[i + 1];
 
-      const shuffledAnswers =
-        shuffle(
-          selected
-        );
+        if (!second) {
+          sentences.push(phraseToSentence(first.phrase));
+          continue;
+        }
 
-      const detailLimit =
-        Math.min(
-          6,
-          shuffledAnswers.length
-        );
-
-      for (
-        let i = 0;
-        i < detailLimit;
-        i++
-      ) {
-        const sentence =
-          chooseUnused(
-            getCandidates(
-              shuffledAnswers[i]
-            )
-          );
-
-        if (sentence) {
-          sentences.push(
-            sentence
-          );
+        const a = first.phrase.replace(/[.!?]+$/, "");
+        const b = second.phrase.replace(/[.!?]+$/, "");
+        const conjunctions = [
+          `${a}, and ${b}.`,
+          `${a}. ${b.charAt(0).toUpperCase()}${b.slice(1)}.`,
+          `${a}, and ${b}.`
+        ];
+        const combined = chooseUnused(conjunctions);
+        if (combined) {
+          sentences.push(phraseToSentence(combined).replace(/\.\./g, "."));
+        } else {
+          sentences.push(phraseToSentence(a));
+          sentences.push(phraseToSentence(b));
         }
       }
 
-      if (
-        positive.length &&
-        negative.length
-      ) {
-        const balance =
-          positive.length >=
-          negative.length
-            ? [
-                "There were a few small concerns, but the better parts of the visit had a stronger impact on me.",
-                "Although everything was not perfect, the good aspects outweighed the weaker ones.",
-                "A few things could be better, but the positives were more noticeable to me.",
-              ]
-            : [
-                "There were some good moments, but the weaker areas were more noticeable to me.",
-                "Although a few things went well, the issues had a stronger effect on my visit.",
-                "Some parts worked nicely, but the areas needing improvement affected my impression more.",
-              ];
-
-        const balanceSentence =
-          chooseUnused(
-            balance
-          );
-
-        if (
-          balanceSentence
-        ) {
-          sentences.push(
-            balanceSentence
-          );
-        }
+      if (positive.length && negative.length) {
+        const balance = positive.length >= negative.length
+          ? [
+              "There were a couple of small things that could be better, but overall the positives stood out more",
+              "Although not everything was perfect, I was still happy with most of the experience"
+            ]
+          : [
+              "There were a few good points, but the areas that need improvement affected my overall impression",
+              "Some parts went well, although the problems were harder to overlook"
+            ];
+        const balanceSentence = chooseUnused(balance);
+        if (balanceSentence) sentences.push(phraseToSentence(balanceSentence));
       }
 
       const closingPools = {
         positive: [
-          "I would be happy to return based on this visit.",
-          "I left with a good feeling about the place.",
-          "It was a visit I would generally look back on positively.",
-          "I would be comfortable coming back again.",
-          "I would gladly consider another visit.",
+          "I would happily return",
+          "I would gladly choose this place again",
+          "I would be happy to come back",
+          "I would recommend giving this place a try",
+          "I came away satisfied and would return",
+          "I would keep this place in mind for another visit",
+          "I would be comfortable choosing this place again",
+          "I would be pleased to return in the future",
+          "It was a worthwhile visit and I would come back",
+          "I would happily consider this place again",
+          "I would recommend it to someone looking for this kind of place",
+          "I would gladly return if the opportunity came up",
+          "I would consider coming back",
+          "I would be open to another visit",
+          "I would choose this place again for a similar need",
+          "I left feeling that the visit was worth my time"
         ],
-
         neutral: [
-          "There is definitely room to make the experience better.",
-          "With a few improvements, the experience could be stronger.",
-          "It was an okay visit, but there is still scope for improvement.",
-          "A little more consistency would make the experience better.",
-          "A few small changes would make a noticeable difference.",
+          "A few changes could make the next visit better",
+          "There is room for improvement, but the experience was acceptable",
+          "I would consider returning if the weaker areas were addressed",
+          "With a little more attention to detail, this could be a better experience",
+          "The experience was reasonable, though not especially memorable",
+          "Some improvements would make me more confident about returning",
+          "I hope the areas that need work receive more attention",
+          "I would keep this place in mind, with a few reservations",
+          "The overall experience was fair, but it could be smoother",
+          "I might return after seeing some improvements"
         ],
-
         negative: [
-          "I hope some of these areas receive more attention in the future.",
-          "With better attention to these points, the experience could be much stronger.",
-          "I would like to see some improvement before considering another visit.",
-          "Addressing these issues would make a meaningful difference.",
-          "I hope the weaker areas are improved going forward.",
-        ],
+          "I hope these concerns are taken seriously",
+          "I would need to see improvements before considering another visit",
+          "The experience left me hesitant to return",
+          "I hope future visitors have a smoother experience",
+          "I would reconsider visiting once these issues are addressed",
+          "There is clear room to improve the overall experience",
+          "I cannot say I would return based on this visit",
+          "I hope the service becomes more consistent",
+          "The experience did not give me much reason to come back",
+          "I would be more willing to return after meaningful improvements"
+        ]
       };
 
-      const closing =
-        chooseUnused(
-          closingPools[tone]
-        );
-
-      if (closing) {
-        sentences.push(
-          closing
-        );
-      }
+      const closing = chooseUnused(closingPools[tone]);
+      if (closing) sentences.push(phraseToSentence(closing));
 
       const finalSentences = [
         ...new Map(
@@ -2405,13 +2482,10 @@ const Review = () => {
         ).values(),
       ].filter(Boolean);
 
-      saveUsedReviewSentences(
-        finalSentences
-      );
-
-      return finalSentences.join(
-        " "
-      );
+      // Do not save history here: this function may be called many
+      // times while searching for a unique full review. Saving here
+      // would exhaust the phrase library during failed attempts.
+      return finalSentences.join(" ");
     };
 
   const generateReview =
@@ -2424,51 +2498,46 @@ const Review = () => {
        * history, so sentences consumed by a previous attempt in
        * the SAME generation cannot come back.
        */
-      for (
-        let attempt = 0;
-        attempt < 250;
-        attempt++
-      ) {
-        const candidate =
-          generateReviewOnce(
-            answerState
-          );
+      let lastCandidate = "";
 
-        if (!candidate) {
-          continue;
-        }
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const candidate = generateReviewOnce(answerState);
+        if (!candidate) continue;
 
-        const history =
-          new Set(
-            [
-              ...usedReviewHistory,
-              ...getStoredReviewHistory(),
-            ].map(
-              getReviewKey
-            )
-          );
+        lastCandidate = candidate;
+        const history = new Set(
+          [...usedReviewHistory, ...getStoredReviewHistory()].map(getReviewKey)
+        );
 
-        if (
-          !history.has(
-            getReviewKey(
-              candidate
-            )
-          )
-        ) {
-          saveUsedReview(
-            candidate
-          );
-
+        if (!history.has(getReviewKey(candidate))) {
+          // Only save sentence history for the final, accepted review.
+          const sentences = candidate.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [candidate];
+          saveUsedReviewSentences(sentences);
+          saveUsedReview(candidate);
           return candidate;
         }
       }
 
-      /*
-       * IMPORTANT:
-       * Do NOT fall back to an old review.
-       * Repeating an old sentence is worse than returning empty.
-       */
-      return "";
+      // The phrase library is finite. If every full combination has
+      // already been used, reuse the latest valid candidate rather
+      // than clearing the review textarea.
+      if (lastCandidate) {
+        const sentences = lastCandidate.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [lastCandidate];
+        saveUsedReviewSentences(sentences);
+        saveUsedReview(lastCandidate);
+        return lastCandidate;
+      }
+
+      // Last-resort safety net: build a readable review from the
+      // selected answers without requiring unused-history entries.
+      const fallback = generateReviewOnce(answerState);
+      if (fallback) {
+        saveUsedReviewSentences(fallback.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [fallback]);
+        saveUsedReview(fallback);
+        return fallback;
+      }
+
+      return "We couldn't generate a review from the selected answers. Please try again.";
     };
 
   const handleFinish =
@@ -2505,7 +2574,7 @@ const Review = () => {
                   item.question,
                 answer:
                   answerState[
-                    item.id
+                  item.id
                   ],
               })
             ),
@@ -2579,103 +2648,71 @@ const Review = () => {
       );
     };
 
-  const handleOpenGoogleReview =
-    async () => {
-      const raw =
-        business?.googleReviewUrl?.trim();
 
-      if (!raw) {
-        alert(
-          "Google Review URL is not configured for this business."
-        );
-        return;
+  const handleOpenGoogleReview = async () => {
+    const raw = business?.googleReviewUrl?.trim();
+
+    if (!raw) {
+      alert("Google Review URL is not configured for this business.");
+      return;
+    }
+
+    let validUrl;
+
+    try {
+      validUrl = new URL(raw);
+
+      if (!["http:", "https:"].includes(validUrl.protocol)) {
+        throw new Error();
       }
+    } catch {
+      alert("The Google Review URL is invalid.");
+      return;
+    }
 
-      let validUrl;
+    let copied = false;
 
+    try {
+      await navigator.clipboard.writeText(generatedReview);
+      copied = true;
+    } catch {
       try {
-        validUrl =
-          new URL(raw);
+        const textarea = document.createElement("textarea");
+        textarea.value = generatedReview;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
 
-        if (
-          ![
-            "http:",
-            "https:",
-          ].includes(
-            validUrl.protocol
-          )
-        ) {
-          throw new Error();
-        }
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+
+        copied = document.execCommand("copy");
+        document.body.removeChild(textarea);
       } catch {
-        alert(
-          "The Google Review URL is invalid."
-        );
-        return;
+        copied = false;
       }
+    }
 
-      try {
-        await navigator.clipboard.writeText(
-          generatedReview
-        );
-      } catch {
-        try {
-          const textarea =
-            document.createElement(
-              "textarea"
-            );
+    if (!copied) {
+      alert("Unable to copy your review. Please copy it manually.");
+      return;
+    }
 
-          textarea.value =
-            generatedReview;
+    setShowCopyPopup(true);
 
-          textarea.style.position =
-            "fixed";
+    window.setTimeout(() => {
+      window.location.href = validUrl.href;
+    }, 3000);
 
-          textarea.style.left =
-            "-9999px";
-
-          document.body.appendChild(
-            textarea
-          );
-
-          textarea.focus();
-          textarea.select();
-
-          document.execCommand(
-            "copy"
-          );
-
-          document.body.removeChild(
-            textarea
-          );
-        } catch {
-          // Ignore clipboard fallback errors.
-        }
-      }
-
-      await recordActivity(
-        "google_opened",
-        {
-          answers:
-            reviewQuestions.map(
-              (question) => ({
-                questionId:
-                  question.id,
-                question:
-                  question.question,
-                answer:
-                  answers[
-                    question.id
-                  ],
-              })
-            ),
-          generatedReview,
-        }
-      );
-
-      window.location.href =
-        validUrl.href;
-    };
+    await recordActivity("google_opened", {
+      answers: reviewQuestions.map((question) => ({
+        questionId: question.id,
+        question: question.question,
+        answer: answers[question.id],
+      })),
+      generatedReview,
+    });
+  };
 
   if (loading) {
     return (
@@ -2848,12 +2885,11 @@ const Review = () => {
                   (star) => (
                     <span
                       key={star}
-                      className={`review-rating-star ${
-                        star <=
-                        filledRatingStars
+                      className={`review-rating-star ${star <=
+                          filledRatingStars
                           ? "filled"
                           : ""
-                      }`}
+                        }`}
                       aria-hidden="true"
                     >
                       ★
@@ -2899,6 +2935,21 @@ const Review = () => {
               />
             </div>
 
+            {showCopyPopup && (
+              <div className="review-popup-overlay" role="status" aria-live="polite">
+                <div className="review-popup">
+                  <div className="review-popup-check">✓</div>
+                  <h3>Your review has been copied!</h3>
+                  <p>
+                    Please paste your review on Google Reviews.
+                  </p>
+                  <p className="review-popup-redirect">
+                    Redirecting to Google Reviews in 3 seconds...
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="review-result-actions">
               <button
                 type="button"
@@ -2907,7 +2958,7 @@ const Review = () => {
                   handleOpenGoogleReview
                 }
               >
-                Open Google Review
+                Copy and Paste Review
 
                 <Icon
                   name="arrow"
@@ -3080,7 +3131,7 @@ const Review = () => {
 
   const question =
     reviewQuestions[
-      currentQuestion
+    currentQuestion
     ];
 
   if (!question) {
@@ -3089,7 +3140,7 @@ const Review = () => {
 
   const selectedAnswer =
     answers[
-      question.id
+    question.id
     ];
 
   const progress =
@@ -3177,7 +3228,7 @@ const Review = () => {
                 const professionalText =
                   question
                     .professionalOptions[
-                    optionIndex
+                  optionIndex
                   ] ||
                   getOptionText(
                     option
@@ -3194,11 +3245,10 @@ const Review = () => {
                       option.id ||
                       `${question.id}-${optionIndex}`
                     }
-                    className={`review-option ${
-                      selected
+                    className={`review-option ${selected
                         ? "selected"
                         : ""
-                    }`}
+                      }`}
                     onClick={() =>
                       handleAnswer(
                         optionIndex

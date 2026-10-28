@@ -24,6 +24,8 @@ const Businesses = ({ onNavigate }) => {
   const [statusFilter, setStatusFilter] = useState("All");
   const [deletingId, setDeletingId] = useState(null);
   const [copiedBusinessId, setCopiedBusinessId] = useState(null);
+  const [selectedQrTemplate, setSelectedQrTemplate] = useState("color");
+  const [qrActionError, setQrActionError] = useState("");
 
   // Custom delete confirmation
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -109,129 +111,148 @@ const Businesses = ({ onNavigate }) => {
   };
 
   /* =========================================
-     DOWNLOAD BUSINESS QR
+     TEMPLATE QR EXPORT / PRINT
   ========================================= */
 
-  const downloadBusinessQR = (business) => {
-    const svg = document.getElementById(
-      `business-qr-${business.id}`
-    );
-
-    if (!svg) return;
-
-    const source = new XMLSerializer().serializeToString(svg);
-
-    const blob = new Blob([source], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-
-    link.href = url;
-
-    link.download = `${(business.name || "business")
-      .trim()
-      .replace(/[^a-z0-9-_]/gi, "-")}-review-qr.svg`;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
+  const qrTemplateFiles = {
+    color: "/qr-template-color.png",
+    black: "/qr-template-black.png",
+    wave: "/qr-template-wave.png",
   };
 
-  /* =========================================
-     PRINT BUSINESS QR
-  ========================================= */
+  const loadImage = (src) =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error(`Could not load ${src}. Make sure the QR template PNG files are in frontend/public.`));
+      image.src = src;
+    });
 
-  const printBusinessQR = (business) => {
-    const svg = document.getElementById(
-      `business-qr-${business.id}`
-    );
+  const createTemplatedQrImage = async (business) => {
+    const svg = document.getElementById(`business-qr-${business.id}`);
+    if (!svg) throw new Error("QR code not found. Close and reopen this window, then try again.");
 
-    if (!svg) return;
+    const templateImage = await loadImage(qrTemplateFiles[selectedQrTemplate]);
+    const svgCopy = svg.cloneNode(true);
+    svgCopy.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    const svgBlob = new Blob([new XMLSerializer().serializeToString(svgCopy)], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const svgUrl = URL.createObjectURL(svgBlob);
 
+    try {
+      const qrImage = await loadImage(svgUrl);
+      const canvas = document.createElement("canvas");
+      canvas.width = templateImage.naturalWidth;
+      canvas.height = templateImage.naturalHeight;
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Canvas is not supported in this browser.");
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const centerX = w / 2;
+      const isWaveTemplate = selectedQrTemplate === "wave";
+      context.drawImage(templateImage, 0, 0, w, h);
+
+      // Heading and Google wordmark, matching the Create Business poster.
+      context.save();
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = isWaveTemplate ? "#202a3a" : "#ffffff";
+      context.shadowColor = isWaveTemplate ? "transparent" : "rgba(0,0,0,0.55)";
+      context.shadowBlur = w * 0.003;
+      context.font = `800 ${Math.round(w * 0.038)}px Arial, sans-serif`;
+      context.fillText("REVIEW US ON", centerX, h * 0.101);
+      context.restore();
+
+      context.save();
+      context.textBaseline = "middle";
+      context.font = `700 ${Math.round(w * 0.065)}px Arial, sans-serif`;
+      context.textAlign = "left";
+      const letters = [["G", "#4285F4"], ["o", "#EA4335"], ["o", "#FBBC05"], ["g", "#4285F4"], ["l", "#34A853"], ["e", "#EA4335"]];
+      const widths = letters.map(([letter]) => context.measureText(letter).width);
+      let letterX = centerX - widths.reduce((sum, width) => sum + width, 0) / 2;
+      letters.forEach(([letter, color], index) => {
+        context.fillStyle = color;
+        context.fillText(letter, letterX, h * 0.145);
+        letterX += widths[index];
+      });
+      context.restore();
+
+      // Keep the QR inside the template's central frame.
+      const qrBoxWidth = w * (isWaveTemplate ? 0.40 : 0.48);
+      const qrSize = qrBoxWidth * (230 / 238);
+      const qrX = (w - qrSize) / 2;
+      const qrCenterY = h * (isWaveTemplate ? 0.46 : 0.51);
+      const qrY = qrCenterY - qrSize / 2;
+      context.fillStyle = "#ffffff";
+      const qrPadding = qrBoxWidth * 0.025;
+      context.fillRect(qrX - qrPadding, qrY - qrPadding, qrSize + qrPadding * 2, qrSize + qrPadding * 2);
+      context.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+
+      // Review message with a little line spacing and five stars.
+      context.save();
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = "#ffffff";
+      context.shadowColor = "rgba(0,0,0,0.65)";
+      context.shadowBlur = w * 0.004;
+      context.shadowOffsetY = 1;
+      context.font = `600 ${Math.round(w * 0.025)}px Arial, sans-serif`;
+      context.fillText("Please take a moment to give", centerX, h * 0.805);
+      context.fillText("us a Google Review!", centerX, h * 0.838);
+      context.shadowBlur = 0;
+      context.fillStyle = "#fbbc05";
+      context.font = `700 ${Math.round(w * 0.038)}px Arial, sans-serif`;
+      context.fillText("★★★★★", centerX, h * 0.875);
+      context.restore();
+      return canvas;
+    } finally {
+      URL.revokeObjectURL(svgUrl);
+    }
+  };
+
+  const downloadBusinessQR = async (business) => {
+    setQrActionError("");
+    try {
+      const canvas = await createTemplatedQrImage(business);
+      const blob = await new Promise((resolve, reject) =>
+        canvas.toBlob((result) => result ? resolve(result) : reject(new Error("Could not create the PNG download.")), "image/png")
+      );
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${(business.name || "business").trim().replace(/[^a-z0-9-_]/gi, "-")}-review-qr.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+    } catch (err) {
+      console.error("QR download failed:", err);
+      setQrActionError(err.message || "Unable to download the QR poster.");
+    }
+  };
+
+  const printBusinessQR = async (business) => {
+    setQrActionError("");
     const printWindow = window.open("", "_blank");
-
     if (!printWindow) {
-      window.alert("Please allow pop-ups to print the QR code.");
+      setQrActionError("Please allow pop-ups to print the QR poster.");
       return;
     }
-
-    const svgMarkup =
-      new XMLSerializer().serializeToString(svg);
-
-    const safeName = String(
-      business.name || "Business"
-    ).replace(/[&<>"']/g, (character) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
-    })[character]);
-
-    printWindow.document.write(`<!DOCTYPE html>
-      <html>
-        <head>
-          <title>${safeName} Review QR</title>
-
-          <style>
-            * {
-              box-sizing: border-box;
-            }
-
-            body {
-              margin: 0;
-              min-height: 100vh;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 16px;
-              font-family: Arial, sans-serif;
-              text-align: center;
-              color: #17233e;
-            }
-
-            svg {
-              width: 260px;
-              height: 260px;
-            }
-
-            p {
-              margin: 0;
-            }
-
-            @media print {
-              body {
-                min-height: auto;
-                padding: 24px;
-              }
-            }
-          </style>
-        </head>
-
-        <body>
-          <h2>${safeName}</h2>
-
-          ${svgMarkup}
-
-          <p>Scan to write a review</p>
-
-          <script>
-            window.onload = function () {
-              window.print();
-            };
-          <\/script>
-        </body>
-      </html>`);
-
-    printWindow.document.close();
+    printWindow.document.write("<title>Preparing QR poster…</title><p style='font-family:Arial;padding:24px'>Preparing your QR poster for printing…</p>");
+    try {
+      const canvas = await createTemplatedQrImage(business);
+      const imageUrl = canvas.toDataURL("image/png");
+      const safeName = String(business.name || "Business").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+      printWindow.document.open();
+      printWindow.document.write(`<!doctype html><html><head><title>${safeName} Review QR</title><style>*{box-sizing:border-box}html,body{margin:0;padding:0;width:100%;height:100%;font-family:Arial,sans-serif}body{display:flex;align-items:center;justify-content:center}img{display:block;max-width:100%;max-height:100vh;object-fit:contain}@page{size:auto;margin:8mm}@media print{img{width:100%;height:auto;max-height:95vh}}</style></head><body><img src="${imageUrl}" alt="${safeName} review QR poster" onload="window.focus();window.print();"></body></html>`);
+      printWindow.document.close();
+    } catch (err) {
+      console.error("QR print failed:", err);
+      printWindow.close();
+      setQrActionError(err.message || "Unable to prepare the QR poster for printing.");
+    }
   };
 
   /* =========================================
@@ -244,10 +265,7 @@ const Businesses = ({ onNavigate }) => {
     setDeleteTarget(business);
   };
 
-  /* =========================================
-     CLOSE DELETE CONFIRMATION
-  ========================================= */
-
+  
   const closeDeleteConfirmation = () => {
     if (deletingId) return;
 
@@ -278,10 +296,7 @@ const Businesses = ({ onNavigate }) => {
     }
   };
 
-  /* =========================================
-     REFRESH
-  ========================================= */
-
+ 
   const handleRefresh = async () => {
     try {
       await refreshBusinesses();
@@ -289,6 +304,7 @@ const Businesses = ({ onNavigate }) => {
       console.error("Refresh failed:", err);
     }
   };
+
 
   /* =========================================
      OPEN VIEW MODAL
@@ -331,6 +347,8 @@ const Businesses = ({ onNavigate }) => {
     setSelectedBusiness(business);
 
     setModalMode("qr");
+    setSelectedQrTemplate("color");
+    setQrActionError("");
 
     setModalLoading(true);
 
@@ -1499,21 +1517,33 @@ const Businesses = ({ onNavigate }) => {
 
                   <>
 
-                    <div className="business-detail-qr-preview business-qr-large-preview">
-
-                      <QRCodeSVG
-                        id={`business-qr-${selectedBusiness.id}`}
-                        value={getBusinessReviewUrl(
-                          selectedBusiness
-                        )}
-                        size={240}
-                        bgColor="#ffffff"
-                        fgColor="#17233e"
-                        level="H"
-                        includeMargin
-                      />
-
+                    <div style={{ margin: "0 auto 22px", maxWidth: 430, width: "100%" }}>
+                      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10, marginBottom: 16 }} aria-label="Choose QR poster template">
+                        {[{ id: "color", label: "Color" }, { id: "black", label: "Black" }, { id: "wave", label: "Wave" }].map((template) => (
+                          <button key={template.id} type="button" onClick={() => setSelectedQrTemplate(template.id)} aria-pressed={selectedQrTemplate === template.id} style={{ border: selectedQrTemplate === template.id ? "2px solid #2859e8" : "1px solid #d9e1ef", background: selectedQrTemplate === template.id ? "#eef3ff" : "#fff", color: "#17233e", borderRadius: 10, padding: "8px 16px", fontWeight: 700, cursor: "pointer" }}>
+                            {template.label}{selectedQrTemplate === template.id ? " ✓" : ""}
+                          </button>
+                        ))}
+                      </div>
+                      <div className={`qr-template-preview qr-template-${selectedQrTemplate}`} style={{ position: "relative", width: "100%", aspectRatio: "3 / 4", overflow: "hidden", borderRadius: 14, background: "#18233f", boxShadow: "0 12px 30px rgba(15,23,42,.14)" }}>
+                        <img src={qrTemplateFiles[selectedQrTemplate]} alt={`${selectedQrTemplate} QR poster template`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "fill" }} />
+                        <div style={{ position: "absolute", top: "8.5%", left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, pointerEvents: "none" }}>
+                          <span style={{ color: selectedQrTemplate === "wave" ? "#202a3a" : "#fff", fontWeight: 800, letterSpacing: ".08em", fontSize: "clamp(8px, 2.5vw, 13px)", textShadow: selectedQrTemplate === "wave" ? "none" : "0 1px 4px #0008" }}>REVIEW US ON</span>
+                          <span style={{ fontWeight: 800, fontSize: "clamp(20px, 6vw, 32px)", lineHeight: 1.1, letterSpacing: "-0.04em", fontFamily: "Arial, sans-serif" }} aria-label="Google"><span style={{ color: "#4285F4" }}>G</span><span style={{ color: "#EA4335" }}>o</span><span style={{ color: "#FBBC05" }}>o</span><span style={{ color: "#4285F4" }}>g</span><span style={{ color: "#34A853" }}>l</span><span style={{ color: "#EA4335" }}>e</span></span>
+                        </div>
+                        <div style={{ position: "absolute", left: "50%", top: selectedQrTemplate === "wave" ? "46%" : "51%", transform: "translate(-50%, -50%)", width: selectedQrTemplate === "wave" ? "40%" : "48%", padding: "1.1%", background: "#fff", boxSizing: "content-box", lineHeight: 0 }}>
+                          <QRCodeSVG id={`business-qr-${selectedBusiness.id}`} value={getBusinessReviewUrl(selectedBusiness)} size={240} style={{ width: "100%", height: "auto" }} bgColor="#ffffff" fgColor="#17233e" level="H" includeMargin />
+                        </div>
+                        <div style={{ position: "absolute", left: 0, right: 0, bottom: "10%", display: "flex", flexDirection: "column", alignItems: "center", gap: 5, color: "#fff", textAlign: "center", padding: "0 8px", textShadow: "0 1px 4px #000b", fontSize: "clamp(8px, 2.2vw, 12px)", fontWeight: 600, pointerEvents: "none" }}>
+                          <span>Please take a moment to give</span>
+                          <span>us a Google Review!</span>
+                          <span style={{ color: "#fbbc05", fontSize: "1.45em", letterSpacing: ".08em" }}>★★★★★</span>
+                        </div>
+                      </div>
+                      <p style={{ color: "#64748b", fontSize: 13, textAlign: "center", margin: "12px 0 0" }}>Select a template, then download or print this designed QR poster.</p>
                     </div>
+
+                    {qrActionError && <div className="business-modal-error" role="alert">{qrActionError}</div>}
 
 
                     <div className="business-qr-url-section">

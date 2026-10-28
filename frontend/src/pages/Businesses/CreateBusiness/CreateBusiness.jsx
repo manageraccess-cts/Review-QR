@@ -595,6 +595,8 @@ const CreateBusiness = ({
     useState(false);
   const [qrGenerated, setQrGenerated] =
     useState(false);
+  const [selectedQrTemplate, setSelectedQrTemplate] =
+    useState("color");
   const [isQrUrlCopied, setIsQrUrlCopied] =
     useState(false);
   const [aiQuestions, setAiQuestions] =
@@ -1349,53 +1351,161 @@ const CreateBusiness = ({
         );
       }
     };
-  const downloadQR =
-    () => {
-      const svg =
-        document.getElementById(
-          "reviewqr-generated"
-        );
-      if (!svg) {
-        return;
-      }
-      const serializer =
-        new XMLSerializer();
-      const source =
-        serializer.serializeToString(
-          svg
-        );
-      const blob =
-        new Blob(
-          [source],
-          {
-            type:
-              "image/svg+xml;charset=utf-8",
-          }
-        );
-      const url =
-        URL.createObjectURL(
-          blob
-        );
-      const link =
-        document.createElement(
-          "a"
-        );
-      link.href = url;
-      link.download =
-        `${createdBusiness?.name ||
-        "business"
-        }-review-qr.svg`;
-      document.body.appendChild(
-        link
-      );
-      link.click();
-      document.body.removeChild(
-        link
-      );
-      URL.revokeObjectURL(
-        url
-      );
+  const downloadQR = async () => {
+    const svg = document.getElementById("reviewqr-generated");
+    const preview = document.querySelector(".qr-template-preview");
+    if (!svg || !preview || !createdBusiness) return;
+
+    const templateFiles = {
+      color: "/qr-template-color.png",
+      black: "/qr-template-black.png",
+      wave: "/qr-template-wave.png",
     };
+
+    let svgUrl;
+
+    try {
+      const templateImage = new Image();
+      templateImage.crossOrigin = "anonymous";
+      templateImage.src = templateFiles[selectedQrTemplate];
+
+      await new Promise((resolve, reject) => {
+        templateImage.onload = resolve;
+        templateImage.onerror = () =>
+          reject(new Error(`Could not load ${templateFiles[selectedQrTemplate]}. Make sure the image is in frontend/public.`));
+      });
+
+      const svgSource = new XMLSerializer().serializeToString(svg);
+      const svgBlob = new Blob([svgSource], {
+        type: "image/svg+xml;charset=utf-8",
+      });
+      svgUrl = URL.createObjectURL(svgBlob);
+
+      const qrImage = new Image();
+      qrImage.src = svgUrl;
+      await new Promise((resolve, reject) => {
+        qrImage.onload = resolve;
+        qrImage.onerror = reject;
+      });
+
+      // Export at the exact aspect ratio of the template image.
+      const canvas = document.createElement("canvas");
+      canvas.width = templateImage.naturalWidth;
+      canvas.height = templateImage.naturalHeight;
+
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Canvas is not supported in this browser.");
+
+      context.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const centerX = w / 2;
+      const isBlackTemplate = selectedQrTemplate === "black";
+      const isWaveTemplate = selectedQrTemplate === "wave";
+
+      // Match the preview's heading placement and preserve all text.
+      context.save();
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = isWaveTemplate ? "#202a3a" : "#ffffff";
+      context.shadowColor = isWaveTemplate
+        ? "rgba(255,255,255,0)"
+        : "rgba(0,0,0,0.65)";
+      context.shadowBlur = Math.max(2, w * 0.003);
+      context.shadowOffsetY = 1;
+      context.font = `800 ${Math.round(w * 0.045)}px Arial, sans-serif`;
+      context.fillText("REVIEW US ON", centerX, h * 0.101);
+      context.restore();
+
+      // Draw the Google wordmark in its six official letter colours.
+      context.save();
+      context.textBaseline = "middle";
+      context.font = `700 ${Math.round(w * 0.075)}px Arial, sans-serif`;
+      context.textAlign = "left";
+      context.shadowColor = "transparent";
+      const googleLetters = [
+        ["G", "#4285F4"],
+        ["o", "#EA4335"],
+        ["o", "#FBBC05"],
+        ["g", "#4285F4"],
+        ["l", "#34A853"],
+        ["e", "#EA4335"],
+      ];
+      const letterWidths = googleLetters.map(([letter]) =>
+        context.measureText(letter).width
+      );
+      const totalGoogleWidth = letterWidths.reduce((sum, width) => sum + width, 0);
+      let letterX = centerX - totalGoogleWidth / 2;
+      googleLetters.forEach(([letter, color], index) => {
+        context.fillStyle = color;
+        context.fillText(letter, letterX, h * 0.145);
+        letterX += letterWidths[index];
+      });
+      context.restore();
+
+      // Match the responsive preview: QR width is 30% of the full image.
+      // The Wave template's frame sits higher than the Color and Black frames.
+      const qrBoxWidth = w * 0.55;
+      const qrSize = qrBoxWidth * (230 / 238);
+      const qrX = (w - qrSize) / 2;
+      const qrCenterY = h * (isWaveTemplate ? 0.46 : 0.51);
+      const qrY = qrCenterY - qrSize / 2;
+
+      context.save();
+      context.shadowColor = "transparent";
+      context.shadowBlur = 0;
+      context.shadowOffsetY = 0;
+      context.fillStyle = "#ffffff";
+      const qrPadding = qrBoxWidth * 0.025;
+      context.fillRect(
+        qrX - qrPadding,
+        qrY - qrPadding,
+        qrSize + qrPadding * 2,
+        qrSize + qrPadding * 2
+      );
+      context.restore();
+      context.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+
+      // Keep the review prompt and five stars visible like the website preview.
+      context.save();
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = isBlackTemplate || isWaveTemplate ? "#ffffff" : "#ffffff";
+      context.shadowColor = "rgba(0,0,0,0.65)";
+      context.shadowBlur = w * 0.004;
+      context.shadowOffsetY = 1;
+      context.font = `600 ${Math.round(w * 0.047)}px Arial, sans-serif`;
+      context.fillText("Please take a moment to give", centerX, h * 0.805);
+      context.fillText("us a Google Review!", centerX, h * 0.838);
+      context.shadowBlur = 0;
+      context.fillStyle = "#fbbc05";
+      context.font = `700 ${Math.round(w * 0.057)}px Arial, sans-serif`;
+      context.fillText("★★★★★", centerX, h * 0.870);
+      context.restore();
+
+      const blob = await new Promise((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+      if (!blob) throw new Error("Could not create the PNG download.");
+
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `${createdBusiness.name || "business"}-review-qr.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (error) {
+      console.error("Unable to download designed QR card:", error);
+      window.alert(
+        "Could not download the QR card. Check that the three QR template PNG files are in frontend/public."
+      );
+    } finally {
+      if (svgUrl) URL.revokeObjectURL(svgUrl);
+    }
+  };
   const resetForm = () => {
     setStep(1);
     setFormData({
@@ -1406,6 +1516,7 @@ const CreateBusiness = ({
       googleReviewUrl: "",
       selectedQuestions: [],
     });
+
     setCustomSpecialization("");
     setAiQuestions([]);
     setQuestionsGenerated(false);
@@ -1413,6 +1524,7 @@ const CreateBusiness = ({
     setQrGenerated(false);
     setErrors({});
   };
+
   if (isGeneratingQR) {
     return (
       <div className="create-business-page">
@@ -1509,29 +1621,56 @@ const CreateBusiness = ({
             </div>
           </header>
           <div className="qr-success-content qr-premium-content">
-            <div className="qr-preview-card qr-premium-preview">
-              <div className="qr-preview-glow" />
-              <span className="qr-preview-orbit qr-orbit-a" />
-              <span className="qr-preview-orbit qr-orbit-b" />
-              <span className="qr-preview-dot qr-dot-a" />
-              <span className="qr-preview-dot qr-dot-b" />
-              <div className="qr-code-wrapper qr-premium-code">
-                <QRCodeSVG
-                  id="reviewqr-generated"
-                  value={qrUrl}
-                  size={230}
-                  bgColor="#ffffff"
-                  fgColor="#17233e"
-                  level="H"
-                  includeMargin
-                />
+            <div className="qr-preview-column">
+              <div className="qr-template-picker" aria-label="Choose your QR template">
+                <strong>Choose your QR template</strong>
+                <div className="qr-template-options">
+                  {[
+                    { id: "color", label: "Color", image: "/qr-template-color.png" },
+                    { id: "black", label: "Black", image: "/qr-template-black.png" },
+                    { id: "wave", label: "Wave", image: "/qr-template-wave.png" },
+                  ].map((template) => (
+                    <button
+                      key={template.id}
+                      type="button"
+                      className={`qr-template-option ${selectedQrTemplate === template.id ? "selected" : ""}`}
+                      onClick={() => setSelectedQrTemplate(template.id)}
+                      aria-pressed={selectedQrTemplate === template.id}
+                    >
+                      <img src={template.image} alt={`${template.label} QR template preview`} />
+                      <span>{template.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="qr-code-label qr-premium-label">
-                <Icon
-                  name="qr"
-                  size={16}
+              <div className={`qr-preview-card qr-template-preview qr-template-${selectedQrTemplate}`}>
+                <img
+                  className="qr-template-background"
+                  src={`/qr-template-${selectedQrTemplate === "color" ? "color" : selectedQrTemplate === "black" ? "black" : "wave"}.png`}
+                  alt={`${selectedQrTemplate} QR template`}
                 />
-                Scan to write a review
+                <div className="qr-template-heading" aria-label="Review us on Google">
+                  <span className="qr-template-title">REVIEW US ON</span>
+                  <span className="qr-template-google" aria-label="Google">
+                    <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+                  </span>
+                </div>
+                <div className="qr-template-code-overlay">
+                  <QRCodeSVG
+                    id="reviewqr-generated"
+                    value={qrUrl}
+                    size={230}
+                    bgColor="#ffffff"
+                    fgColor="#17233e"
+                    level="H"
+                    includeMargin
+                  />
+                </div>
+                <div className="qr-template-footer">
+                  <span>Please take a moment to give</span>
+                  <span>us a Google Review!</span>
+                  <span className="qr-template-stars" aria-label="Five stars">★★★★★</span>
+                </div>
               </div>
             </div>
             <div className="qr-details-card qr-premium-details">

@@ -6240,3 +6240,267 @@ span {
     font-size: 10px !important;
   }
 }
+
+/* ==========================================================
+   QR TEMPLATE PREVIEW — CLEAN, ISOLATED STYLES
+   Background images are 1024 × 1536 (2:3). Keep their ratio.
+   All form, business, question and dashboard styles above remain unchanged.
+   ========================================================== */
+
+.create-business-page .qr-preview-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.create-business-page .qr-template-picker {
+  padding: 16px;
+  border: 1px solid #e1e9f5;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.create-business-page .qr-template-picker > strong {
+  display: block;
+  margin-bottom: 12px;
+  color: #17233e;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.create-business-page .qr-template-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.create-business-page .qr-template-option {
+  min-width: 0;
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #e1e8f3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #263754;
+  cursor: pointer;
+}
+
+.create-business-page .qr-template-option.selected {
+  border-color: #3565f5;
+  box-shadow: 0 0 0 2px rgba(53, 101, 245, 0.12);
+  background: #f5f8ff;
+}
+
+.create-business-page .qr-template-option img {
+  display: block;
+  width: 100%;
+  height: 66px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 6px;
+}
+
+.create-business-page .qr-template-option span {
+  font-size: 11px;
+  font-weight: 750;
+}
+
+/* Preserve the original portrait image proportions instead of stretching
+   the 2:3 images into a 4:5 card. */
+.create-business-page .qr-template-preview {
+  position: relative !important;
+  isolation: isolate;
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  aspect-ratio: 2 / 3 !important;
+  flex: none !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.create-business-page .qr-template-preview > .qr-template-background {
+  position: absolute !important;
+  z-index: 0 !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: fill !important;
+  object-position: center !important;
+}
+
+/* Heading and wordmark */
+.create-business-page .qr-template-preview > .qr-template-heading {
+  position: absolute !important;
+  z-index: 2 !important;
+  top: 9% !important;
+  left: 5% !important;
+  width: 90% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px;
+  color: #ffffff;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.create-business-page .qr-template-title {
+  font-size: clamp(10px, 1.2vw, 19px);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.create-business-page .qr-template-google {
+  position: static !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  font-size: clamp(22px, 3vw, 44px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+  text-shadow: none;
+}
+
+.create-business-page .qr-template-google span:nth-child(1),
+.create-business-page .qr-template-google span:nth-child(4) {
+  color: #4285f4;
+}
+
+.create-business-page .qr-template-google span:nth-child(2),
+.create-business-page .qr-template-google span:nth-child(6) {
+  color: #ea4335;
+}
+
+.create-business-page .qr-template-google span:nth-child(3) {
+  color: #fbbc05;
+}
+
+.create-business-page .qr-template-google span:nth-child(5) {
+  color: #34a853;
+}
+
+/* Larger QR overlay: 40% of the full template width, matching the download. */
+.create-business-page .qr-template-preview > .qr-template-code-overlay {
+  position: absolute !important;
+  z-index: 3 !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 55% !important;
+  max-width: 260px !important;
+  padding: 3px !important;
+  box-sizing: border-box !important;
+  transform: translate(-50%, -50%) !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 3px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  line-height: 0 !important;
+}
+
+.create-business-page .qr-template-code-overlay svg {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+
+/* Footer */
+.create-business-page .qr-template-preview > .qr-template-footer {
+  position: absolute !important;
+  z-index: 2 !important;
+  top: 79% !important;
+  left: 5% !important;
+  width: 90% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  color: #ffffff;
+  font-size: clamp(9px, 1.1vw, 16px);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.create-business-page .qr-template-stars {
+  margin-top: 5px;
+  color: #fbbc05;
+  font-size: clamp(16px, 2.3vw, 32px);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-shadow: none;
+}
+
+/* The Wave image has a white upper section, so its heading must be dark.
+   Only Wave uses a different QR vertical position; other templates stay put. */
+.create-business-page .qr-template-wave .qr-template-heading {
+  top: 9% !important;
+  gap: 8px !important;
+  color: #202a3a !important;
+  text-shadow: none !important;
+}
+
+.create-business-page .qr-template-wave .qr-template-title {
+  color: #202a3a !important;
+  text-shadow: none !important;
+}
+
+.create-business-page .qr-template-wave .qr-template-code-overlay {
+  top: 46% !important;
+  width: 40% !important;
+}
+
+.create-business-page .qr-template-wave .qr-template-footer {
+  top: 79% !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 700px) {
+  .create-business-page .qr-template-option img {
+    height: 52px;
+  }
+
+  .create-business-page .qr-template-title {
+    font-size: 12px;
+  }
+
+  .create-business-page .qr-template-google {
+    font-size: 27px;
+  }
+
+  .create-business-page .qr-template-preview > .qr-template-code-overlay {
+    width: 40% !important;
+    max-width: none !important;
+  }
+
+  .create-business-page .qr-template-wave .qr-template-code-overlay {
+    width: 40% !important;
+  }
+
+  .create-business-page .qr-template-preview > .qr-template-heading {
+    top: 9% !important;
+  }
+
+  .create-business-page .qr-template-preview > .qr-template-footer {
+    top: 79% !important;
+  }
+}
